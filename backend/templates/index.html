@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DaVinci Wecker</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: sans-serif;
+            background: #111;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            gap: 30px;
+        }
+        h1 { font-size: 2rem; letter-spacing: 2px; }
+        .karten {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .karte {
+            background: #222;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            width: 200px;
+        }
+        .karte h2 { margin-bottom: 20px; font-size: 1.1rem; }
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        .btn.an  { background: #f59e0b; color: #000; }
+        .btn.aus { background: #374151; color: #fff; }
+        .btn:hover { opacity: 0.85; transform: scale(1.03); }
+        .aktionen { display: flex; gap: 12px; }
+        .btn-gross {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-gross.an  { background: #10b981; color: #fff; }
+        .btn-gross.aus { background: #ef4444; color: #fff; }
+        .btn-gross:hover { opacity: 0.85; }
+    </style>
+</head>
+<body>
+    <h1>🔦 DaVinci Wecker</h1>
+
+    <div class="karten">
+        <div class="karte">
+            <h2>Scheinwerfer 1</h2>
+            <button class="btn {% if status.scheinwerfer1 %}an{% else %}aus{% endif %}"
+                    id="btn1" onclick="toggle(1)">
+                {{ "AN" if status.scheinwerfer1 else "AUS" }}
+            </button>
+        </div>
+        <div class="karte">
+            <h2>Scheinwerfer 2</h2>
+            <button class="btn {% if status.scheinwerfer2 %}an{% else %}aus{% endif %}"
+                    id="btn2" onclick="toggle(2)">
+                {{ "AN" if status.scheinwerfer2 else "AUS" }}
+            </button>
+        </div>
+    </div>
+
+    <div class="aktionen">
+        <button class="btn-gross an" onclick="alleAn()">Alle AN</button>
+        <button class="btn-gross aus" onclick="alleAus()">Alle AUS</button>
+    </div>
+
+    <script>
+        function updateButton(btn, istAn) {
+            btn.textContent = istAn ? "AN" : "AUS";
+            btn.className = "btn " + (istAn ? "an" : "aus");
+        }
+
+        function toggle(kanal) {
+            fetch("/toggle/" + kanal)
+                .then(r => r.json())
+                .then(data => {
+                    updateButton(document.getElementById("btn1"), data.scheinwerfer1);
+                    updateButton(document.getElementById("btn2"), data.scheinwerfer2);
+                });
+        }
+
+        function alleAn() {
+            fetch("/alle-an")
+                .then(r => r.json())
+                .then(data => {
+                    updateButton(document.getElementById("btn1"), data.scheinwerfer1);
+                    updateButton(document.getElementById("btn2"), data.scheinwerfer2);
+                });
+        }
+
+        function alleAus() {
+            fetch("/alle-aus")
+                .then(r => r.json())
+                .then(data => {
+                    updateButton(document.getElementById("btn1"), data.scheinwerfer1);
+                    updateButton(document.getElementById("btn2"), data.scheinwerfer2);
+                });
+        }
+    </script>
+</body>
+</html>

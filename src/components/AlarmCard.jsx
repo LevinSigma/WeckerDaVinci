@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import AlarmErstellen from "./AlarmErstellen.jsx";
 import WeatherCard from "./WeatherCard.jsx";
+import LightsCard from "./LightsCard.jsx";
 import "./alarm.css";
 
 const quotes = [
@@ -98,7 +99,7 @@ export default function AlarmCard() {
     }
 
     async function notifyPi(path, payload = {}) {
-        const baseUrl = import.meta.env.VITE_PI_ALARM_URL || "http://raspberrypi.local:8001";
+        const baseUrl = import.meta.env.VITE_PI_ALARM_URL || "http://raspberrypi.local:5000";
 
         try {
             await fetch(`${baseUrl}${path}`, {
@@ -189,6 +190,10 @@ export default function AlarmCard() {
             );
         }
 
+        if (currentView === "lights") {
+            return <LightsCard />;
+        }
+
         return (
             <div className="page-card">
                 <h2>Uhrzeit</h2>
@@ -223,6 +228,12 @@ export default function AlarmCard() {
                     onClick={() => setCurrentView("weather")}
                 >
                     Wetter
+                </button>
+                <button
+                    className={`nav-tab ${currentView === "lights" ? "active" : ""}`}
+                    onClick={() => setCurrentView("lights")}
+                >
+                    Licht
                 </button>
             </div>
 
