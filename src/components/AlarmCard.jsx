@@ -18,6 +18,7 @@ export default function AlarmCard() {
     const [activeAlarm, setActiveAlarm] = useState(null);
     const [snoozeUntil, setSnoozeUntil] = useState(null);
     const [currentView, setCurrentView] = useState("time");
+    const [lastTriggeredMinute, setLastTriggeredMinute] = useState(null);
 
     useEffect(() => {
         const interval = window.setInterval(() => {
@@ -25,6 +26,7 @@ export default function AlarmCard() {
             setTime(now);
 
             const currentTime = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+            const currentMinuteKey = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
 
             if (snoozeUntil && now.getTime() < snoozeUntil) {
                 return;
@@ -38,6 +40,10 @@ export default function AlarmCard() {
                 return;
             }
 
+            if (lastTriggeredMinute === currentMinuteKey) {
+                return;
+            }
+
             const ringingAlarm = alarms.find((alarm) => {
                 if (!alarm.active) return false;
                 const [alarmHours, alarmMinutes] = alarm.time.split(":").map(Number);
@@ -46,6 +52,7 @@ export default function AlarmCard() {
             });
 
             if (ringingAlarm) {
+                setLastTriggeredMinute(currentMinuteKey);
                 setActiveAlarm(ringingAlarm);
                 void notifyPi("/alarm/trigger", {
                     label: ringingAlarm.label,
@@ -55,7 +62,7 @@ export default function AlarmCard() {
         }, 1000);
 
         return () => window.clearInterval(interval);
-    }, [activeAlarm, alarms, snoozeUntil]);
+    }, [activeAlarm, alarms, lastTriggeredMinute, snoozeUntil]);
 
     const formattedTime = useMemo(() =>
         time.toLocaleTimeString("de-DE", {
@@ -105,17 +112,35 @@ export default function AlarmCard() {
     }
 
     function handleStop() {
+        const alarmToStop = activeAlarm;
+        const now = new Date();
+        const currentMinuteKey = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+
         setActiveAlarm(null);
         setSnoozeUntil(null);
-        void notifyPi("/alarm/stop", { label: activeAlarm?.label || "Wecker" });
+        setLastTriggeredMinute(currentMinuteKey);
+        void notifyPi("/alarm/stop", { label: alarmToStop?.label || "Wecker" });
     }
 
     function handleSnooze() {
         if (!activeAlarm) return;
 
+        const now = new Date();
+        const currentMinuteKey = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+
         setSnoozeUntil(Date.now() + 5 * 60 * 1000);
         setActiveAlarm(null);
+        setLastTriggeredMinute(currentMinuteKey);
         void notifyPi("/alarm/snooze", { label: activeAlarm.label, time: activeAlarm.time });
+    }
+
+    function handleDeleteAlarm(id) {
+        setAlarms((current) => current.filter((alarm) => alarm.id !== id));
+
+        if (activeAlarm?.id === id) {
+            setActiveAlarm(null);
+            setSnoozeUntil(null);
+        }
     }
 
     function renderView() {
@@ -142,7 +167,12 @@ export default function AlarmCard() {
                                         <div className="alarm-time">{alarm.time}</div>
                                         <div className="alarm-label">{alarm.label}</div>
                                     </div>
-                                    <span className="alarm-status">{alarm.active ? "Aktiv" : "Stumm"}</span>
+                                    <div className="alarm-item-actions">
+                                        <span className="alarm-status">{alarm.active ? "Aktiv" : "Stumm"}</span>
+                                        <button className="delete-button" onClick={() => handleDeleteAlarm(alarm.id)}>
+                                            Löschen
+                                        </button>
+                                    </div>
                                 </div>
                             ))
                         )}
