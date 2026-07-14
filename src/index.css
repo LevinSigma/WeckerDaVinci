@@ -1,0 +1,102 @@
+:root {
+    --bg-1: #0b0f1d;
+    --bg-2: #141a30;
+    --surface: rgba(255, 255, 255, 0.06);
+    --surface-strong: rgba(255, 255, 255, 0.1);
+    --surface-hover: rgba(255, 255, 255, 0.14);
+    --border: rgba(255, 255, 255, 0.12);
+    --border-strong: rgba(255, 255, 255, 0.22);
+    --text: #f4f6fb;
+    --text-dim: rgba(244, 246, 251, 0.62);
+    --text-faint: rgba(244, 246, 251, 0.4);
+
+    --accent: #7c6bff;
+    --accent-2: #22d3ee;
+    --accent-gradient: linear-gradient(135deg, var(--accent), var(--accent-2));
+    --danger: #ff5470;
+    --success: #33d17a;
+
+    --radius-lg: 26px;
+    --radius-md: 18px;
+    --radius-sm: 12px;
+    --radius-pill: 999px;
+
+    --shadow-card: 0 20px 45px -20px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    --shadow-pop: 0 30px 70px -25px rgba(0, 0, 0, 0.65);
+    --shadow-glow: 0 0 0 4px rgba(124, 107, 255, 0.25);
+
+    --font-sans: "Segoe UI", Inter, system-ui, -apple-system, Roboto, Arial, sans-serif;
+    --font-mono: "Cascadia Code", "Courier New", Consolas, monospace;
+
+    --tap-min: 52px;
+    --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    color-scheme: dark;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+}
+
+html {
+    overscroll-behavior: none;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-sans);
+    color: var(--text);
+    background:
+        radial-gradient(circle at 12% -10%, rgba(124, 107, 255, 0.35), transparent 45%),
+        radial-gradient(circle at 100% 0%, rgba(34, 211, 238, 0.22), transparent 40%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-2));
+    background-attachment: fixed;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: var(--radius-pill);
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent-2);
+    outline-offset: 2px;
+}
+
+input,
+textarea {
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+button {
+    font-family: inherit;
+}
+
+::selection {
+    background: var(--accent);
+    color: #08060d;
+}

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import "./alarm.css";
 
 export default function AlarmErstellen({ visible, onClose, onSave }) {
     const labelRef = useRef(null);
