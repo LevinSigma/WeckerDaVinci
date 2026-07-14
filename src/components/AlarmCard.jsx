@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import AlarmErstellen from "./AlarmErstellen.jsx";
 import WeatherCard from "./WeatherCard.jsx";
 import LightsCard from "./LightsCard.jsx";
+import alarmSound from "../assets/dragon-studio-alarm-going-off-494307.mp3";
 import "./alarm.css";
 
 const quotes = [
@@ -20,6 +21,19 @@ export default function AlarmCard() {
     const [snoozeUntil, setSnoozeUntil] = useState(null);
     const [currentView, setCurrentView] = useState("time");
     const [lastTriggeredMinute, setLastTriggeredMinute] = useState(null);
+    const alarmAudioRef = useRef(null);
+
+    useEffect(() => {
+        alarmAudioRef.current = new Audio(alarmSound);
+        alarmAudioRef.current.loop = true;
+
+        return () => {
+            if (alarmAudioRef.current) {
+                alarmAudioRef.current.pause();
+                alarmAudioRef.current.currentTime = 0;
+            }
+        };
+    }, []);
 
     useEffect(() => {
         const interval = window.setInterval(() => {
@@ -59,6 +73,12 @@ export default function AlarmCard() {
                     label: ringingAlarm.label,
                     time: ringingAlarm.time,
                 });
+
+                if (alarmAudioRef.current) {
+                    void alarmAudioRef.current.play().catch((error) => {
+                        console.warn("Alarmton konnte nicht abgespielt werden:", error);
+                    });
+                }
             }
         }, 1000);
 
@@ -120,6 +140,10 @@ export default function AlarmCard() {
         setActiveAlarm(null);
         setSnoozeUntil(null);
         setLastTriggeredMinute(currentMinuteKey);
+        if (alarmAudioRef.current) {
+            alarmAudioRef.current.pause();
+            alarmAudioRef.current.currentTime = 0;
+        }
         void notifyPi("/alarm/stop", { label: alarmToStop?.label || "Wecker" });
     }
 
@@ -132,6 +156,10 @@ export default function AlarmCard() {
         setSnoozeUntil(Date.now() + 5 * 60 * 1000);
         setActiveAlarm(null);
         setLastTriggeredMinute(currentMinuteKey);
+        if (alarmAudioRef.current) {
+            alarmAudioRef.current.pause();
+            alarmAudioRef.current.currentTime = 0;
+        }
         void notifyPi("/alarm/snooze", { label: activeAlarm.label, time: activeAlarm.time });
     }
 
