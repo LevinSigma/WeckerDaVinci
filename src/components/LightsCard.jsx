@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "./alarm.css";
 
 const PI_BASE_URL = import.meta.env.VITE_PI_ALARM_URL || "http://raspberrypi.local:5000";
 
@@ -40,9 +39,7 @@ export default function LightsCard() {
     }
 
     return (
-        <div className="page-card">
-            <h2>Lichtsteuerung</h2>
-
+        <div className="lights-widget">
             {!reachable && (
                 <p className="empty-state">Lichtsteuerung nicht erreichbar. Läuft der Server auf dem Raspberry Pi?</p>
             )}
