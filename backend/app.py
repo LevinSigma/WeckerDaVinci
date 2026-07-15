@@ -31,6 +31,7 @@ def lichter_an():
     GPIO.output(27, GPIO.HIGH)
     status["scheinwerfer1"] = True
     status["scheinwerfer2"] = True
+    beacon_an()
 
 
 def lichter_aus():
@@ -38,6 +39,7 @@ def lichter_aus():
     GPIO.output(27, GPIO.LOW)
     status["scheinwerfer1"] = False
     status["scheinwerfer2"] = False
+    beacon_aus()
 
 
 def beacon_an():
@@ -96,14 +98,12 @@ def beacon_toggle():
 @app.route("/alarm/trigger", methods=["POST"])
 def alarm_trigger():
     lichter_an()
-    beacon_an()
     return jsonify(status)
 
 
 @app.route("/alarm/stop", methods=["POST"])
 def alarm_stop():
     lichter_aus()
-    beacon_aus()
     return jsonify(status)
 
 
