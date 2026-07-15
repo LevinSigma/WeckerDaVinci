@@ -5,19 +5,24 @@ import RPi.GPIO as GPIO
 app = Flask(__name__)
 CORS(app)
 
+BEACON = 22
+
 # GPIO Setup
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.OUT)
 GPIO.setup(27, GPIO.OUT)
+GPIO.setup(BEACON, GPIO.OUT)
 
 # Sofort AUS setzen (LOW = AUS bei High-Trigger)
 GPIO.output(17, GPIO.LOW)
 GPIO.output(27, GPIO.LOW)
+GPIO.output(BEACON, GPIO.LOW)
 
 # Status
 status = {
     "scheinwerfer1": False,
-    "scheinwerfer2": False
+    "scheinwerfer2": False,
+    "beacon": False
 }
 
 
@@ -33,6 +38,16 @@ def lichter_aus():
     GPIO.output(27, GPIO.LOW)
     status["scheinwerfer1"] = False
     status["scheinwerfer2"] = False
+
+
+def beacon_an():
+    GPIO.output(BEACON, GPIO.HIGH)
+    status["beacon"] = True
+
+
+def beacon_aus():
+    GPIO.output(BEACON, GPIO.LOW)
+    status["beacon"] = False
 
 
 @app.route("/")
@@ -68,19 +83,27 @@ def alle_aus():
     return jsonify(status)
 
 
+@app.route("/beacon/toggle")
+def beacon_toggle():
+    beacon_aus() if status["beacon"] else beacon_an()
+    return jsonify(status)
+
+
 # --- Wecker-Integration ---
 # Wird vom React-Frontend aufgerufen, wenn ein Alarm klingelt, gestoppt
-# oder gesnoozed wird (siehe notifyPi() in AlarmCard.jsx).
+# oder gesnoozed wird (siehe notifyPi() in AlarmsWidget.jsx).
 
 @app.route("/alarm/trigger", methods=["POST"])
 def alarm_trigger():
     lichter_an()
+    beacon_an()
     return jsonify(status)
 
 
 @app.route("/alarm/stop", methods=["POST"])
 def alarm_stop():
     lichter_aus()
+    beacon_aus()
     return jsonify(status)
 
 
