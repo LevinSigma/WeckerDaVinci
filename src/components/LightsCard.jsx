@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 const PI_BASE_URL = import.meta.env.VITE_PI_ALARM_URL || "http://raspberrypi.local:5000";
 
 export default function LightsCard() {
-    const [status, setStatus] = useState({ scheinwerfer1: false, scheinwerfer2: false, beacon: false });
+    const [status, setStatus] = useState({ scheinwerfer1: false, scheinwerfer2: false, beacon: false, fan: false });
     const [loading, setLoading] = useState(false);
     const [reachable, setReachable] = useState(true);
 
@@ -84,6 +84,20 @@ export default function LightsCard() {
                         disabled={loading}
                     >
                         {status.beacon ? "Ausschalten" : "Einschalten"}
+                    </button>
+                </div>
+
+                <div className="alarm-item">
+                    <div>
+                        <div className="alarm-time">Ventilator</div>
+                        <div className="alarm-label">{status.fan ? "An" : "Aus"}</div>
+                    </div>
+                    <button
+                        className={`touch-button ${status.fan ? "primary" : "secondary"}`}
+                        onClick={() => callEndpoint("/fan/toggle")}
+                        disabled={loading}
+                    >
+                        {status.fan ? "Ausschalten" : "Einschalten"}
                     </button>
                 </div>
             </div>

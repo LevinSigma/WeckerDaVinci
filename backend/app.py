@@ -6,23 +6,27 @@ app = Flask(__name__)
 CORS(app)
 
 BEACON = 22
+FAN = 23
 
 # GPIO Setup
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.OUT)
 GPIO.setup(27, GPIO.OUT)
 GPIO.setup(BEACON, GPIO.OUT)
+GPIO.setup(FAN, GPIO.OUT)
 
 # Sofort AUS setzen (LOW = AUS bei High-Trigger)
 GPIO.output(17, GPIO.LOW)
 GPIO.output(27, GPIO.LOW)
 GPIO.output(BEACON, GPIO.LOW)
+GPIO.output(FAN, GPIO.LOW)
 
 # Status
 status = {
     "scheinwerfer1": False,
     "scheinwerfer2": False,
-    "beacon": False
+    "beacon": False,
+    "fan": False
 }
 
 
@@ -32,6 +36,7 @@ def lichter_an():
     status["scheinwerfer1"] = True
     status["scheinwerfer2"] = True
     beacon_an()
+    fan_an()
 
 
 def lichter_aus():
@@ -40,6 +45,7 @@ def lichter_aus():
     status["scheinwerfer1"] = False
     status["scheinwerfer2"] = False
     beacon_aus()
+    fan_aus()
 
 
 def beacon_an():
@@ -50,6 +56,16 @@ def beacon_an():
 def beacon_aus():
     GPIO.output(BEACON, GPIO.LOW)
     status["beacon"] = False
+
+
+def fan_an():
+    GPIO.output(FAN, GPIO.HIGH)
+    status["fan"] = True
+
+
+def fan_aus():
+    GPIO.output(FAN, GPIO.LOW)
+    status["fan"] = False
 
 
 @app.route("/")
@@ -88,6 +104,12 @@ def alle_aus():
 @app.route("/beacon/toggle")
 def beacon_toggle():
     beacon_aus() if status["beacon"] else beacon_an()
+    return jsonify(status)
+
+
+@app.route("/fan/toggle")
+def fan_toggle():
+    fan_aus() if status["fan"] else fan_an()
     return jsonify(status)
 
 
