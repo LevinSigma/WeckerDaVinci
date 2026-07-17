@@ -1,12 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-const quotes = [
-    { text: "Heute ist ein guter Tag, um ruhig zu beginnen.", author: "Daily Calm" },
-    { text: "Kleine Schritte bringen große Veränderungen.", author: "Morgenroutine" },
-    { text: "Ein stiller Anfang macht den Tag klarer.", author: "Sinnvoll leben" },
-    { text: "Ruhe ist keine Pause, sondern ein guter Beginn.", author: "Tagesenergie" },
-    { text: "Die beste Zeit, anzufangen, ist jetzt.", author: "Tagesmotto" },
-];
+
 
 export default function ClockWidget() {
     const [time, setTime] = useState(new Date());
@@ -15,6 +9,7 @@ export default function ClockWidget() {
         const interval = window.setInterval(() => setTime(new Date()), 1000);
         return () => window.clearInterval(interval);
     }, []);
+
 
     const formattedTime = useMemo(
         () =>
@@ -36,11 +31,18 @@ export default function ClockWidget() {
         [time]
     );
 
-    const dailyQuote = useMemo(() => {
-        const dateKey = time.toISOString().slice(0, 10);
-        const index = Array.from(dateKey).reduce((sum, char) => sum + char.charCodeAt(0), 0) % quotes.length;
-        return quotes[index];
-    }, [time]);
+const [dailyQuote, setDailyQuote] = useState({ text: "", author: "" });
+
+    useEffect(() => {
+        fetch("https://dummyjson.com/quotes/random")
+            .then((res) => res.json())
+            .then((data) => setDailyQuote({ text: data.quote, author: data.author }))
+            .catch((err) => {
+                if (err.name !== "AbortError") {
+                    console.error("Fehler beim Abrufen des Zitats:", err);
+                }
+            });
+    }, []);
 
     return (
         <div className="clock-widget">

@@ -1,13 +1,16 @@
+
+import { useState } from "react";
+
 export default function WidgetPicker({ visible, options, onAdd, onClose }) {
     if (!visible) return null;
 
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal-content picker-content" onClick={(e) => e.stopPropagation()}>
-                <h4>Widget hinzufügen</h4>
+                <h4>Widget auswählen</h4>
 
                 {options.length === 0 ? (
-                    <p className="empty-state">Alle Widgets sind bereits auf dem Dashboard.</p>
+                    <p className="empty-state">Keine Widgets verfügbar</p>
                 ) : (
                     <div className="picker-grid">
                         {options.map((option) => (

@@ -33,6 +33,8 @@ export default function AlarmsWidget() {
         };
     }, []);
 
+
+
     useEffect(() => {
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify(alarms));
     }, [alarms]);
@@ -160,13 +162,13 @@ export default function AlarmsWidget() {
         <div className="alarms-widget">
             <div className="alarm-actions">
                 <button className="touch-button primary" onClick={() => setShowOverlay(true)}>
-                    + Neuer Wecker
+                    Wecker hinzufügen
                 </button>
             </div>
 
             <div className="alarm-list">
                 {alarms.length === 0 ? (
-                    <p className="empty-state">Noch keine Wecker gespeichert.</p>
+                    <p className="empty-state">Keine Wecker vorhanden</p>
                 ) : (
                     alarms.map((alarm) => (
                         <div
@@ -200,7 +202,7 @@ export default function AlarmsWidget() {
             {activeAlarm && (
                 <div className="alarm-overlay">
                     <div className="alarm-ring-card">
-                        <h3>Wecker läuft</h3>
+                        <h3>Wecker klingelt!</h3>
                         <p className="alarm-ring-label">{activeAlarm.label}</p>
                         <div className="alarm-times">{activeAlarm.time}</div>
 
@@ -209,7 +211,7 @@ export default function AlarmsWidget() {
                                 Stopp
                             </button>
                             <button className="touch-button secondary large" onClick={handleSnooze}>
-                                5 Min später
+                                Snooze
                             </button>
                         </div>
                     </div>

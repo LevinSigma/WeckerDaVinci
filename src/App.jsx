@@ -7,15 +7,16 @@ import AlarmsWidget from "./components/AlarmsWidget.jsx";
 import WeatherCard from "./components/WeatherCard.jsx";
 import LightsCard from "./components/LightsCard.jsx";
 import TodoCard from "./components/TodoCard.jsx";
+import Settings from "./components/settings.jsx";
 
 const STORAGE_KEY = "davinci-widgets";
 
 const WIDGET_TYPES = [
-    { id: "clock", label: "Uhrzeit", icon: "🕐", size: "lg", component: ClockWidget },
-    { id: "alarms", label: "Wecker", icon: "⏰", size: "lg", component: AlarmsWidget },
-    { id: "weather", label: "Wetter", icon: "🌤️", size: "sm", component: WeatherCard },
-    { id: "lights", label: "Licht", icon: "💡", size: "sm", component: LightsCard },
-    { id: "todo", label: "To-Do", icon: "✅", size: "md", component: TodoCard },
+    { id: "clock", label: "Uhrzeit", icon: "", size: "lg", component: ClockWidget },
+    { id: "alarms", label: "Wecker", icon: "", size: "lg", component: AlarmsWidget },
+    { id: "weather", label: "Wetter", icon: "", size: "sm", component: WeatherCard },
+    { id: "lights", label: "Licht", icon: "", size: "sm", component: LightsCard },
+    { id: "todo", label: "To-Do", icon: "", size: "md", component: TodoCard },
 ];
 
 const DEFAULT_WIDGETS = WIDGET_TYPES.map((widget) => widget.id);
@@ -52,12 +53,11 @@ function App() {
     return (
         <div className="dashboard">
             <header className="dashboard-header">
-                <h1 className="dashboard-title">DaVinci Wecker</h1>
                 <button
                     type="button"
                     className="add-widget-button"
                     onClick={() => setPickerOpen(true)}
-                    aria-label="Widget hinzufügen"
+                    aria-label={('widget.add')}
                 >
                     +
                 </button>
@@ -88,6 +88,7 @@ function App() {
                 onAdd={addWidget}
                 onClose={() => setPickerOpen(false)}
             />
+            <Settings />
         </div>
     );
 }
