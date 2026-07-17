@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import "./alarm.css";
 
 export default function AlarmErstellen({ visible, onClose, onSave }) {
     const labelRef = useRef(null);
@@ -54,7 +56,9 @@ export default function AlarmErstellen({ visible, onClose, onSave }) {
         setIsActive(true);
     };
 
-    return (
+    if (!visible || typeof document === "undefined") return null;
+
+    return createPortal(
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <h4>Neuer Wecker</h4>
@@ -114,11 +118,12 @@ export default function AlarmErstellen({ visible, onClose, onSave }) {
                             className="timer-input-field"
                         />
                         <button onClick={startTimer} className="btn-timer">
-                            Timer starten
+                            Start
                         </button>
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
