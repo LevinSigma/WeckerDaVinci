@@ -1,0 +1,1 @@
+app.py backend steuerung von allem was an den RasberryPi angeschlossen ist
