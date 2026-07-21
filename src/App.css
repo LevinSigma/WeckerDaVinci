@@ -1,24 +1,34 @@
 /* ---------- Dashboard layout ---------- */
 
 .dashboard {
-    min-height: 100vh;
-    padding: clamp(0.9rem, 2vw, 1.75rem);
+    height: 100vh;
+    height: 100dvh;
+    padding: clamp(0.75rem, 2vw, 1.5rem);
     display: flex;
     flex-direction: column;
-    gap: clamp(1rem, 2vw, 1.5rem);
+    gap: clamp(0.6rem, 1.4vw, 1rem);
+    overflow: hidden;
 }
 
 .dashboard-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 0.75rem;
+    flex: none;
 }
 
 .dashboard-title {
+    flex: 1;
+    min-width: 0;
     margin: 0;
-    font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+    font-size: clamp(1.1rem, 2.4vw, 1.6rem);
     font-weight: 700;
     letter-spacing: 0.01em;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     background: var(--accent-gradient);
     -webkit-background-clip: text;
     background-clip: text;
@@ -50,18 +60,36 @@
 
 .dashboard-grid {
     flex: 1;
+    min-height: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    grid-auto-rows: minmax(180px, auto);
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+    grid-auto-rows: minmax(180px, 1fr);
     grid-auto-flow: dense;
-    gap: clamp(0.9rem, 1.8vw, 1.4rem);
-    align-content: start;
+    gap: clamp(0.7rem, 1.6vw, 1.2rem);
+    align-content: stretch;
+    overflow-y: auto;
+    padding-bottom: 0.1rem;
 }
 
-@media (min-width: 760px) {
+.widget--lg {
+    grid-column: span 2;
+}
+
+@media (max-width: 520px) {
     .widget--lg {
-        grid-column: span 2;
+        grid-column: span 1;
     }
+}
+
+.dashboard-grid:empty::after {
+    content: "Kein Widget aktiv. Mit + ein Widget hinzufügen.";
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-faint);
+    font-size: 0.95rem;
+    text-align: center;
 }
 
 /* ---------- Widget shell ---------- */
@@ -69,13 +97,15 @@
 .widget {
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    min-height: 0;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-card);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
-    padding: clamp(1rem, 1.6vw, 1.35rem);
+    padding: clamp(0.9rem, 1.6vw, 1.3rem);
     overflow: hidden;
 }
 
@@ -83,37 +113,44 @@
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    margin-bottom: 0.9rem;
+    margin-bottom: 0.75rem;
+    flex: none;
 }
 
 .widget-icon {
     font-size: 1.3rem;
     line-height: 1;
+    flex: none;
 }
 
 .widget-title {
     flex: 1;
+    min-width: 0;
     margin: 0;
     font-size: 1.05rem;
     font-weight: 700;
     color: var(--text);
     letter-spacing: 0.01em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .widget-remove {
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
+    width: var(--tap-min-sm);
+    height: var(--tap-min-sm);
+    min-width: var(--tap-min-sm);
     border-radius: 50%;
     border: 1px solid var(--border);
     background: transparent;
     color: var(--text-dim);
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     line-height: 1;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex: none;
     transition: background 0.15s ease, color 0.15s ease, transform 0.15s var(--ease-pop);
 }
 
@@ -160,7 +197,7 @@ button {
     flex: 1;
     background: var(--accent-gradient);
     border-color: transparent;
-    color: #0b0f1d;
+    color: var(--on-accent);
     box-shadow: 0 12px 30px -14px rgba(124, 107, 255, 0.65);
 }
 
@@ -205,11 +242,11 @@ button {
 .btn-primary {
     background: var(--accent-gradient);
     border-color: transparent;
-    color: #0b0f1d;
+    color: var(--on-accent);
 }
 
 .btn-secondary {
-    background: transparent;
+    background: var(--surface);
     color: var(--text-dim);
 }
 
@@ -219,18 +256,19 @@ button {
 }
 
 .icon-button {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
+    width: var(--tap-min-sm);
+    height: var(--tap-min-sm);
+    min-width: var(--tap-min-sm);
     border-radius: 50%;
     border: 1px solid var(--border);
     background: var(--surface);
     color: var(--text-dim);
-    font-size: 1rem;
+    font-size: 1.05rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex: none;
     transition: transform 0.12s var(--ease-pop), background 0.15s ease, color 0.15s ease;
 }
 
@@ -262,14 +300,17 @@ button {
 }
 
 .delete-button {
+    min-height: var(--tap-min-sm);
     padding: 0.55rem 0.9rem;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
-    background: transparent;
+    background: var(--surface);
     color: var(--text-dim);
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
     transition: background 0.15s ease, color 0.15s ease;
 }
 
@@ -332,6 +373,7 @@ input:focus {
     justify-content: center;
     z-index: 1000;
     padding: 1rem;
+    overflow-y: auto;
     animation: fade-in 0.18s ease;
 }
 
@@ -344,11 +386,14 @@ input:focus {
     flex-direction: column;
     gap: 0.85rem;
     width: min(420px, 100%);
+    max-height: min(88dvh, 640px);
+    overflow-y: auto;
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-lg);
     color: var(--text);
     box-shadow: var(--shadow-pop);
     animation: pop-in 0.2s var(--ease-pop);
+    margin: auto;
 }
 
 .modal-content h4 {
@@ -445,17 +490,30 @@ input:focus {
     font-size: 0.95rem;
 }
 
+.alarms-widget,
+.lights-widget {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    flex: 1;
+    min-height: 0;
+}
+
 .alarm-list {
     display: flex;
     flex-direction: column;
     gap: 0.7rem;
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
 }
 
 .alarm-item {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    gap: 0.6rem;
     padding: 0.85rem 1rem;
     background: var(--surface);
     border: 1px solid var(--border);
@@ -468,29 +526,39 @@ input:focus {
     border-color: var(--accent);
 }
 
+.alarm-item > div:first-child {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow-wrap: anywhere;
+}
+
 .alarm-time {
     font-size: 1.2rem;
     font-weight: 700;
     color: var(--text);
     font-family: var(--font-mono);
+    overflow-wrap: anywhere;
 }
 
 .alarm-label {
     color: var(--text-dim);
     font-size: 0.9rem;
     margin-top: 0.15rem;
+    overflow-wrap: anywhere;
 }
 
 .alarm-item-actions {
     display: flex;
     align-items: center;
     gap: 0.7rem;
+    flex: none;
 }
 
 .alarm-actions {
     display: flex;
     gap: 0.7rem;
     margin-bottom: 0.8rem;
+    flex: none;
 }
 
 /* ---------- Toggle switch ---------- */
@@ -624,21 +692,28 @@ input:focus {
     justify-content: center;
     gap: 0.9rem;
     flex: 1;
+    min-height: 0;
+    max-width: 100%;
+    overflow-y: auto;
     text-align: center;
 }
 
 .clock-display {
-    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    font-size: clamp(2rem, 5.5vw, 3.6rem);
     font-weight: 700;
     font-family: var(--font-mono);
     letter-spacing: 0.02em;
     color: var(--text);
+    max-width: 100%;
+    overflow-wrap: anywhere;
 }
 
 .clock-date {
     color: var(--text-dim);
     font-size: 1rem;
     text-transform: capitalize;
+    max-width: 100%;
+    overflow-wrap: anywhere;
 }
 
 .quote-card {
@@ -651,6 +726,7 @@ input:focus {
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
+    flex: none;
 }
 
 .quote-mark {
@@ -663,6 +739,8 @@ input:focus {
     margin: 0;
     font-size: 0.95rem;
     color: var(--text);
+    overflow-wrap: anywhere;
+    text-align: left;
 }
 
 .quote-author {
@@ -693,12 +771,15 @@ input:focus {
     flex-direction: column;
     gap: 0.9rem;
     flex: 1;
+    min-height: 0;
+    overflow-y: auto;
 }
 
 .weather-today {
     display: flex;
     align-items: baseline;
     gap: 0.6rem;
+    flex-wrap: wrap;
 }
 
 .weather-today-temp {
@@ -744,14 +825,7 @@ input:focus {
     color: var(--text);
 }
 
-/* ---------- Lights widget ---------- */
-
-.lights-widget {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    flex: 1;
-}
+/* ---------- Lights widget: see .alarms-widget, .lights-widget rule above ---------- */
 
 /* ---------- Todo widget ---------- */
 
@@ -766,6 +840,7 @@ input:focus {
 .todo-progress {
     color: var(--text-faint);
     font-size: 0.85rem;
+    flex: none;
 }
 
 .todo-list {
@@ -775,6 +850,8 @@ input:focus {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
 }
 
@@ -794,19 +871,20 @@ input:focus {
 }
 
 .todo-checkbox {
-    width: 30px;
-    height: 30px;
-    min-width: 30px;
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
     border-radius: 50%;
     border: 1px solid var(--border-strong);
     background: transparent;
-    color: #0b0f1d;
+    color: var(--on-accent);
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex: none;
     transition: background 0.15s ease, transform 0.12s var(--ease-pop);
 }
 
@@ -821,6 +899,8 @@ input:focus {
 
 .todo-text {
     flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
     color: var(--text);
     cursor: pointer;
 }
@@ -832,9 +912,11 @@ input:focus {
 
 .todo-edit-input {
     flex: 1;
+    min-width: 0;
 }
 
 .todo-item-actions {
     display: flex;
-    gap: 0.4rem;
+    gap: 0.5rem;
+    flex: none;
 }

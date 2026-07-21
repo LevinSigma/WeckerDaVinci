@@ -14,11 +14,11 @@ import { AlarmProvider } from "./AlarmContext.jsx";
 const STORAGE_KEY = "davinci-widgets";
 
 const WIDGET_TYPES = [
-    { id: "clock", label: "Uhrzeit", icon: "", size: "lg", component: ClockWidget },
-    { id: "alarms", label: "Wecker", icon: "", size: "lg", component: AlarmsWidget },
-    { id: "weather", label: "Wetter", icon: "", size: "sm", component: WeatherCard },
-    { id: "lights", label: "Licht", icon: "", size: "sm", component: LightsCard },
-    { id: "todo", label: "To-Do", icon: "", size: "md", component: TodoCard },
+    { id: "clock", label: "Uhrzeit", icon: "🕐", size: "lg", component: ClockWidget },
+    { id: "alarms", label: "Wecker", icon: "⏰", size: "lg", component: AlarmsWidget },
+    { id: "weather", label: "Wetter", icon: "☁️", size: "sm", component: WeatherCard },
+    { id: "lights", label: "Licht", icon: "💡", size: "sm", component: LightsCard },
+    { id: "todo", label: "To-Do", icon: "✅", size: "md", component: TodoCard },
 ];
 
 const DEFAULT_WIDGETS = WIDGET_TYPES.map((widget) => widget.id);
@@ -56,11 +56,13 @@ function App() {
         <AlarmProvider>
             <div className="dashboard">
                 <header className="dashboard-header">
+                    <Settings />
+                    <h1 className="dashboard-title">DaVinci Wecker</h1>
                     <button
                         type="button"
                         className="add-widget-button"
                         onClick={() => setPickerOpen(true)}
-                        aria-label={('widget.add')}
+                        aria-label="Widget hinzufügen"
                     >
                         +
                     </button>
@@ -91,7 +93,6 @@ function App() {
                     onAdd={addWidget}
                     onClose={() => setPickerOpen(false)}
                 />
-                <Settings />
                 <AlarmPopup />
             </div>
         </AlarmProvider>

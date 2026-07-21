@@ -1,4 +1,46 @@
 :root {
+    /* ---- Light theme (default) ---- */
+    --bg-1: #eef1fa;
+    --bg-2: #ffffff;
+    --surface: rgba(15, 23, 42, 0.045);
+    --surface-strong: rgba(15, 23, 42, 0.08);
+    --surface-hover: rgba(15, 23, 42, 0.12);
+    --border: rgba(15, 23, 42, 0.12);
+    --border-strong: rgba(15, 23, 42, 0.24);
+    --text: #10162a;
+    --text-dim: rgba(16, 22, 42, 0.68);
+    --text-faint: rgba(16, 22, 42, 0.48);
+
+    --accent: #6a4dff;
+    --accent-2: #0891b2;
+    --accent-gradient: linear-gradient(135deg, var(--accent), var(--accent-2));
+    --danger: #d92c4c;
+    --success: #1f9d55;
+    --on-accent: #ffffff;
+
+    --glow-1: rgba(106, 77, 255, 0.22);
+    --glow-2: rgba(8, 145, 178, 0.16);
+
+    --radius-lg: 26px;
+    --radius-md: 18px;
+    --radius-sm: 12px;
+    --radius-pill: 999px;
+
+    --shadow-card: 0 20px 45px -25px rgba(16, 22, 42, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    --shadow-pop: 0 30px 70px -30px rgba(16, 22, 42, 0.35);
+    --shadow-glow: 0 0 0 4px rgba(106, 77, 255, 0.22);
+
+    --font-sans: "Segoe UI", Inter, system-ui, -apple-system, Roboto, Arial, sans-serif;
+    --font-mono: "Cascadia Code", "Courier New", Consolas, monospace;
+
+    --tap-min: 52px;
+    --tap-min-sm: 44px;
+    --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
     --bg-1: #0b0f1d;
     --bg-2: #141a30;
     --surface: rgba(255, 255, 255, 0.06);
@@ -12,24 +54,16 @@
 
     --accent: #7c6bff;
     --accent-2: #22d3ee;
-    --accent-gradient: linear-gradient(135deg, var(--accent), var(--accent-2));
     --danger: #ff5470;
     --success: #33d17a;
+    --on-accent: #0b0f1d;
 
-    --radius-lg: 26px;
-    --radius-md: 18px;
-    --radius-sm: 12px;
-    --radius-pill: 999px;
+    --glow-1: rgba(124, 107, 255, 0.35);
+    --glow-2: rgba(34, 211, 238, 0.22);
 
     --shadow-card: 0 20px 45px -20px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.05);
     --shadow-pop: 0 30px 70px -25px rgba(0, 0, 0, 0.65);
     --shadow-glow: 0 0 0 4px rgba(124, 107, 255, 0.25);
-
-    --font-sans: "Segoe UI", Inter, system-ui, -apple-system, Roboto, Arial, sans-serif;
-    --font-mono: "Cascadia Code", "Courier New", Consolas, monospace;
-
-    --tap-min: 52px;
-    --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
 
     color-scheme: dark;
 }
@@ -53,11 +87,11 @@ body {
     font-family: var(--font-sans);
     color: var(--text);
     background:
-        radial-gradient(circle at 12% -10%, rgba(124, 107, 255, 0.35), transparent 45%),
-        radial-gradient(circle at 100% 0%, rgba(34, 211, 238, 0.22), transparent 40%),
+        radial-gradient(circle at 12% -10%, var(--glow-1), transparent 45%),
+        radial-gradient(circle at 100% 0%, var(--glow-2), transparent 40%),
         linear-gradient(180deg, var(--bg-1), var(--bg-2));
     background-attachment: fixed;
-    overflow-x: hidden;
+    overflow: hidden;
     overscroll-behavior: none;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
@@ -65,6 +99,7 @@ body {
     -webkit-user-select: none;
     scrollbar-width: thin;
     scrollbar-color: var(--border-strong) transparent;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 ::-webkit-scrollbar {

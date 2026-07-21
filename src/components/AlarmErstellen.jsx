@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import "./alarm.css";
 
 export default function AlarmErstellen({ visible, onClose, onSave, onStartTimer }) {
     const labelRef = useRef(null);
