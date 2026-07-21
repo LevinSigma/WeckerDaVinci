@@ -8,6 +8,8 @@ import WeatherCard from "./components/WeatherCard.jsx";
 import LightsCard from "./components/LightsCard.jsx";
 import TodoCard from "./components/TodoCard.jsx";
 import Settings from "./components/settings.jsx";
+import AlarmPopup from "./components/AlarmPopup.jsx";
+import { AlarmProvider } from "./AlarmContext.jsx";
 
 const STORAGE_KEY = "davinci-widgets";
 
@@ -51,45 +53,48 @@ function App() {
     const pickerOptions = WIDGET_TYPES.filter((widget) => !activeIds.includes(widget.id));
 
     return (
-        <div className="dashboard">
-            <header className="dashboard-header">
-                <button
-                    type="button"
-                    className="add-widget-button"
-                    onClick={() => setPickerOpen(true)}
-                    aria-label={('widget.add')}
-                >
-                    +
-                </button>
-            </header>
+        <AlarmProvider>
+            <div className="dashboard">
+                <header className="dashboard-header">
+                    <button
+                        type="button"
+                        className="add-widget-button"
+                        onClick={() => setPickerOpen(true)}
+                        aria-label={('widget.add')}
+                    >
+                        +
+                    </button>
+                </header>
 
-            <main className="dashboard-grid">
-                {activeIds.map((id) => {
-                    const widget = WIDGET_TYPES.find((entry) => entry.id === id);
-                    if (!widget) return null;
-                    const WidgetComponent = widget.component;
-                    return (
-                        <WidgetShell
-                            key={id}
-                            title={widget.label}
-                            icon={widget.icon}
-                            size={widget.size}
-                            onRemove={() => removeWidget(id)}
-                        >
-                            <WidgetComponent />
-                        </WidgetShell>
-                    );
-                })}
-            </main>
+                <main className="dashboard-grid">
+                    {activeIds.map((id) => {
+                        const widget = WIDGET_TYPES.find((entry) => entry.id === id);
+                        if (!widget) return null;
+                        const WidgetComponent = widget.component;
+                        return (
+                            <WidgetShell
+                                key={id}
+                                title={widget.label}
+                                icon={widget.icon}
+                                size={widget.size}
+                                onRemove={() => removeWidget(id)}
+                            >
+                                <WidgetComponent />
+                            </WidgetShell>
+                        );
+                    })}
+                </main>
 
-            <WidgetPicker
-                visible={pickerOpen}
-                options={pickerOptions}
-                onAdd={addWidget}
-                onClose={() => setPickerOpen(false)}
-            />
-            <Settings />
-        </div>
+                <WidgetPicker
+                    visible={pickerOpen}
+                    options={pickerOptions}
+                    onAdd={addWidget}
+                    onClose={() => setPickerOpen(false)}
+                />
+                <Settings />
+                <AlarmPopup />
+            </div>
+        </AlarmProvider>
     );
 }
 
