@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
+import { useAlarms } from "../AlarmContext.jsx";
 
 
 
 export default function ClockWidget() {
     const [time, setTime] = useState(new Date());
+    const { timerEndAt, timerRemaining, cancelTimer } = useAlarms();
 
     useEffect(() => {
         const interval = window.setInterval(() => setTime(new Date()), 1000);
@@ -44,10 +46,28 @@ const [dailyQuote, setDailyQuote] = useState({ text: "", author: "" });
             });
     }, []);
 
+    const formattedTimerRemaining = useMemo(() => {
+        const totalSeconds = Math.max(timerRemaining, 0);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }, [timerRemaining]);
+
     return (
         <div className="clock-widget">
             <div className="clock-display">{formattedTime}</div>
             <div className="clock-date">{formattedDate}</div>
+
+            {timerEndAt != null && (
+                <div className="quote-card timer-running-card">
+                    <span className="quote-author">Timer läuft</span>
+                    <div className="clock-display timer-remaining">{formattedTimerRemaining}</div>
+                    <button type="button" className="touch-button secondary" onClick={cancelTimer}>
+                        Timer abbrechen
+                    </button>
+                </div>
+            )}
+
             <div className="quote-card">
                 <div className="quote-mark">“</div>
                 <p className="quote-text">{dailyQuote.text}</p>

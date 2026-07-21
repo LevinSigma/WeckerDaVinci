@@ -1,0 +1,39 @@
+.alarm-ring-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    background: rgba(6, 8, 16, 0.72);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: alarm-ring-fade-in 0.18s ease;
+}
+
+.alarm-ring-overlay .alarm-ring-card {
+    width: min(440px, 100%);
+    background: var(--bg-2, #111);
+    background-image: linear-gradient(160deg, var(--surface-strong, #1c1c1c), transparent 60%);
+    border: 1px solid var(--border-strong, #fff);
+    border-radius: var(--radius-lg, 16px);
+    color: var(--text, #fff);
+    box-shadow: var(--shadow-pop, 0 20px 60px rgba(0, 0, 0, 0.5));
+    text-align: center;
+    padding: 2rem 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    animation: alarm-ring-pop-in 0.2s ease;
+}
+
+@keyframes alarm-ring-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes alarm-ring-pop-in {
+    from { opacity: 0; transform: scale(0.92) translateY(8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}

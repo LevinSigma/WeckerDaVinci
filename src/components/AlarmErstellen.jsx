@@ -1,26 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import "./alarm.css";
 
-export default function AlarmErstellen({ visible, onClose, onSave }) {
+export default function AlarmErstellen({ visible, onClose, onSave, onStartTimer }) {
     const labelRef = useRef(null);
     const [selectedTime, setSelectedTime] = useState("07:00");
-    const [seconds, setSeconds] = useState(0);
-    const [isActive, setIsActive] = useState(false);
     const [timerInput, setTimerInput] = useState("");
-
-    useEffect(() => {
-        let timer = null;
-        if (isActive && seconds > 0) {
-            timer = window.setTimeout(() => {
-                setSeconds((current) => current - 1);
-            }, 1000);
-        } else if (isActive && seconds === 0) {
-            setIsActive(false);
-            window.alert("Wecker ist abgelaufen!");
-        }
-        return () => window.clearTimeout(timer);
-    }, [isActive, seconds]);
+    const [timerConfirmation, setTimerConfirmation] = useState("");
 
     if (!visible) return null;
 
@@ -52,8 +38,9 @@ export default function AlarmErstellen({ visible, onClose, onSave }) {
             return;
         }
 
-        setSeconds(value);
-        setIsActive(true);
+        onStartTimer && onStartTimer(value);
+        setTimerConfirmation(`Timer läuft (${value}s) – sichtbar auf dem Home-Bildschirm.`);
+        setTimerInput("");
     };
 
     if (!visible || typeof document === "undefined") return null;
@@ -108,7 +95,7 @@ export default function AlarmErstellen({ visible, onClose, onSave }) {
                 <hr className="separator" />
 
                 <div className="timer-section">
-                    <h4>Timer ({seconds}s)</h4>
+                    <h4>Timer</h4>
                     <div className="input-group">
                         <input
                             type="number"
@@ -121,6 +108,7 @@ export default function AlarmErstellen({ visible, onClose, onSave }) {
                             Start
                         </button>
                     </div>
+                    {timerConfirmation && <p className="helper-text">{timerConfirmation}</p>}
                 </div>
             </div>
         </div>,
