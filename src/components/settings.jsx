@@ -97,21 +97,29 @@ const dontSave = () => {
 return (
     <>
       <div className="settings">
-        <button onClick={openModal}>Einstellungen</button>
+        <button
+          type="button"
+          className="settings-trigger"
+          onClick={openModal}
+          aria-label="Einstellungen öffnen"
+        >
+          ⚙
+        </button>
       </div>
 
       {isOpen && (
         <div className="modal-overlay" onClick={dontSave}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2 className="h2">Einstellungen</h2>
-            
-            <p className="p">Lautstärke ({volume}%)</p>
+            <h4>Einstellungen</h4>
+
+            <p className="settings-volume-label">Lautstärke ({volume}%)</p>
             <input
               type="range"
               min="0"
               max="100"
               value={volume}
               onChange={(e) => setVolume(Number(e.target.value))}
+              aria-label="Lautstärke"
             />
 
             <div className="setting-row">
@@ -130,11 +138,15 @@ return (
 
             <div className="setting-row">
               <span className="setting-label">Audio:</span>
-              <select value={getSoundKeyForPath(audio)} onChange={(e) => {
-                const selectedAudio = audioMap[e.target.value];
-                setAudio(selectedAudio);
-                playPreview(selectedAudio);
-              }}>
+              <select
+                className="setting-select"
+                value={getSoundKeyForPath(audio)}
+                onChange={(e) => {
+                  const selectedAudio = audioMap[e.target.value];
+                  setAudio(selectedAudio);
+                  playPreview(selectedAudio);
+                }}
+              >
                 {SOUND_LIBRARY.map((sound) => (
                   <option key={sound.key} value={sound.key}>
                     {sound.name}
@@ -142,9 +154,14 @@ return (
                 ))}
               </select>
          </div>
-            <div style={{ marginTop: "20px", display: "flex", gap: "10px" }}>
-              <button onClick={handleSave}>Speichern</button>
-              <button onClick={dontSave}>Abbrechen</button>
+
+            <div className="button-group-right">
+              <button onClick={dontSave} className="btn-secondary">
+                Abbrechen
+              </button>
+              <button onClick={handleSave} className="btn-primary">
+                Speichern
+              </button>
             </div>
           </div>
         </div>

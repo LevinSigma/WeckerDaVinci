@@ -1,136 +1,124 @@
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); 
+/* Settings modal reuses the shared .modal-overlay / .modal-content / .btn-primary
+   / .btn-secondary styles from App.css so it stays visually consistent with the
+   other modals (AlarmErstellen, WidgetPicker) and follows the same theme vars. */
+
+.settings-trigger {
+    width: var(--tap-min);
+    height: var(--tap-min);
+    min-width: var(--tap-min);
+    min-height: var(--tap-min);
+    border-radius: 50%;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 1.4rem;
+    line-height: 1;
     display: flex;
-    justify-content: center;
     align-items: center;
-    z-index: 999; 
+    justify-content: center;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s var(--ease-pop), background 0.15s ease;
 }
 
-.modal-content {
-    background: var(--card-bg);
-    color: var(--text-color);
-    padding: 24px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    min-width: 300px;
-    text-align: left;
+.settings-trigger:active {
+    transform: scale(0.92);
+    background: var(--surface-strong);
 }
 
-.h2, .p {
-    color: var(--text-color);
-    margin-bottom: 16px;
-}
-
-.h2 {
-    margin-top: 0;
-}
-
-/* Theme variables */
-:root {
-  --bg-color: #ffffff;
-  --text-color: #111827;
-  --card-bg: #ffffff;
-  --input-bg: #f9fafb;
-  --border-color: #d1d5db;
-}
-
-[data-theme="dark"] {
-  --bg-color: #111827;
-  --text-color: #f9fafb;
-  --card-bg: #1f2937;
-  --input-bg: #374151;
-  --border-color: #4b5563;
-}
-
-/* Apply theme to body */
-body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.modal-content select,
-.modal-content input[type="range"] {
-  width: 100%;
-  background-color: var(--input-bg);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  padding: 8px 10px;
-}
-
-.modal-content button {
-  margin-top: 12px;
-  width: 100%;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 12px;
-  background-color: #4f46e5;
-  color: white;
-  cursor: pointer;
+.settings-volume-label {
+    margin: 0;
+    color: var(--text-dim);
+    font-size: 0.95rem;
 }
 
 .setting-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 12px 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.4rem 0;
 }
 
 .setting-label {
-  color: var(--text-color);
-  font-weight: 600;
+    color: var(--text);
+    font-weight: 600;
 }
 
-/* Slider toggle styles */
+.setting-select {
+    width: 100%;
+    min-height: var(--tap-min);
+    padding: 0.65rem 0.85rem;
+    font-size: 1rem;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.setting-select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--shadow-glow);
+}
+
+input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent);
+    min-height: var(--tap-min-sm);
+}
+
+/* ---------- Slider toggle ---------- */
+
 .switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 26px;
-  flex-shrink: 0;
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    flex-shrink: 0;
 }
 
 .switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
 
 .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #cbd5e1;
-  transition: 0.4s;
-  border-radius: 26px;
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: var(--surface-strong);
+    border: 1px solid var(--border-strong);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    border-radius: var(--radius-pill);
 }
 
 .slider:before {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: 0.4s;
-  border-radius: 50%;
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 3px;
+    top: 3px;
+    background-color: var(--bg-2);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s var(--ease-pop);
+    border-radius: 50%;
 }
 
 input:checked + .slider {
-  background-color: #4f46e5;
+    background: var(--accent-gradient);
+    border-color: transparent;
 }
 
 input:checked + .slider:before {
-  transform: translateX(24px);
+    transform: translateX(26px);
+    background-color: #fff;
+}
+
+input:focus-visible + .slider {
+    outline: 2px solid var(--accent-2);
+    outline-offset: 2px;
 }
