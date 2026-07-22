@@ -115,6 +115,29 @@ export default function LightsCard() {
                     <span className="toggle-chip-label">{testPlaying ? "Stopp" : "Sound-Test"}</span>
                 </button>
             </div>
+
+            <div className="toggle-all-row">
+                <button
+                    type="button"
+                    className="toggle-chip toggle-chip--all"
+                    onClick={() => callEndpoint("/alle-an")}
+                    disabled={loading}
+                    aria-label="Alle einschalten"
+                >
+                    <span className="toggle-chip-icon" aria-hidden="true">✅</span>
+                    <span className="toggle-chip-label">Alle An</span>
+                </button>
+                <button
+                    type="button"
+                    className="toggle-chip toggle-chip--all"
+                    onClick={() => callEndpoint("/alle-aus")}
+                    disabled={loading}
+                    aria-label="Alle ausschalten"
+                >
+                    <span className="toggle-chip-icon" aria-hidden="true">🛑</span>
+                    <span className="toggle-chip-label">Alle Aus</span>
+                </button>
+            </div>
         </div>
     );
 }

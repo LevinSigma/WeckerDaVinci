@@ -914,6 +914,19 @@ input:focus {
     font-size: 0.85rem;
 }
 
+.toggle-all-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.toggle-chip--all {
+    flex: 1;
+    flex-direction: row;
+    min-height: 48px;
+    font-size: 0.85rem;
+}
+
 /* ---------- Todo widget ---------- */
 
 .todo-widget {
