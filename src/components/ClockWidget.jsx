@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAlarms } from "../AlarmContext.jsx";
+import { useDragScroll } from "../useDragScroll.js";
 
 
 
 export default function ClockWidget() {
     const [time, setTime] = useState(new Date());
     const { timerEndAt, timerRemaining, cancelTimer } = useAlarms();
+    const scrollRef = useDragScroll("y");
 
     useEffect(() => {
         const interval = window.setInterval(() => setTime(new Date()), 1000);
@@ -54,7 +56,7 @@ const [dailyQuote, setDailyQuote] = useState({ text: "", author: "" });
     }, [timerRemaining]);
 
     return (
-        <div className="clock-widget">
+        <div className="clock-widget" ref={scrollRef}>
             <div className="clock-display">{formattedTime}</div>
             <div className="clock-date">{formattedDate}</div>
 

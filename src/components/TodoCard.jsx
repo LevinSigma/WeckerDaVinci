@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useDragScroll } from "../useDragScroll.js";
 
 const STORAGE_KEY = "davinci-todos";
 
@@ -16,6 +17,7 @@ export default function TodoCard() {
     const [newTodo, setNewTodo] = useState("");
     const [editingId, setEditingId] = useState(null);
     const [editingText, setEditingText] = useState("");
+    const listRef = useDragScroll("y");
 
     useEffect(() => {
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
@@ -79,7 +81,7 @@ export default function TodoCard() {
                 </div>
             )}
 
-            <ul className="todo-list">
+            <ul className="todo-list" ref={listRef}>
                 {todos.length === 0 ? (
                     <p className="empty-state">Keine offenen Aufgaben.</p>
                 ) : (

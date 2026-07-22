@@ -61,11 +61,13 @@
 /* A single row of full-height widgets that scrolls left/right. Each widget
    stretches from the top of the screen to the bottom; the row grows wider
    (scrollable) as widgets are added instead of the page scrolling vertically.
-   touch-action is declared explicitly here (pan-x) and on every internal
-   vertical scroller (pan-y, see below) so Chromium doesn't have to guess
-   which nested scroll container a touch-drag belongs to — without that,
-   ambiguous nested scrollers commonly fall back to "no touch scroll",
-   leaving only mouse/scrollbar-drag working. */
+   Scrolling itself is driven by useDragScroll (Pointer Events), not the
+   browser's native touch-pan gesture: some touchscreens (the Pi's official
+   7" panel among them) surface input as emulated single-touch mouse events,
+   which never trigger native touch-scrolling - only interactive widgets
+   like a scrollbar thumb react to those. touch-action: none stops the
+   browser's own gesture handling from fighting with the manual scrollLeft
+   updates. */
 .dashboard-scroll {
     flex: 1;
     min-height: 0;
@@ -76,9 +78,13 @@
     gap: clamp(0.55rem, 1.2vw, 0.9rem);
     overflow-x: auto;
     overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
+    touch-action: none;
+    cursor: grab;
     padding-bottom: 0.1rem;
+}
+
+.dashboard-scroll.dragging-scroll {
+    cursor: grabbing;
 }
 
 .dashboard-scroll:empty::after {
@@ -522,6 +528,7 @@ input:focus {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+    touch-action: none;
 }
 
 .alarm-item {
@@ -711,6 +718,7 @@ input:focus {
     min-height: 0;
     max-width: 100%;
     overflow-y: auto;
+    touch-action: none;
     text-align: center;
 }
 
@@ -789,6 +797,7 @@ input:focus {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+    touch-action: none;
 }
 
 .weather-today {
@@ -931,6 +940,7 @@ input:focus {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+    touch-action: none;
 }
 
 .todo-item {
