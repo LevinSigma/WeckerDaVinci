@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useDragScroll } from "../useDragScroll.js";
 
 const WEEKDAYS = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
 
 export default function WeatherCard() {
     const [temperatures, setTemperatures] = useState(null);
     const [error, setError] = useState(false);
+    const scrollRef = useDragScroll("y");
 
     useEffect(() => {
         fetch(
@@ -30,7 +32,7 @@ export default function WeatherCard() {
     }
 
     return (
-        <div className="weather-widget">
+        <div className="weather-widget" ref={scrollRef}>
             <div className="weather-today">
                 <span className="weather-today-temp">{Math.round(temperatures[0])}°</span>
                 <span className="weather-today-label">Zürich, heute</span>

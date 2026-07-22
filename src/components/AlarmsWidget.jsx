@@ -1,10 +1,12 @@
 import { useState } from "react";
 import AlarmErstellen from "./AlarmErstellen.jsx";
 import { useAlarms } from "../AlarmContext.jsx";
+import { useDragScroll } from "../useDragScroll.js";
 
 export default function AlarmsWidget() {
     const [showOverlay, setShowOverlay] = useState(false);
     const { alarms, addAlarm, toggleAlarm, deleteAlarm, ringing, startTimer } = useAlarms();
+    const listRef = useDragScroll("y");
 
     function handleSave(alarm) {
         addAlarm(alarm);
@@ -19,7 +21,7 @@ export default function AlarmsWidget() {
                 </button>
             </div>
 
-            <div className="alarm-list">
+            <div className="alarm-list" ref={listRef}>
                 {alarms.length === 0 ? (
                     <p className="empty-state">Keine Wecker vorhanden</p>
                 ) : (

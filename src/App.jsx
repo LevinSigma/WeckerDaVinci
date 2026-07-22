@@ -10,6 +10,7 @@ import TodoCard from "./components/TodoCard.jsx";
 import Settings from "./components/settings.jsx";
 import AlarmPopup from "./components/AlarmPopup.jsx";
 import { AlarmProvider } from "./AlarmContext.jsx";
+import { useDragScroll } from "./useDragScroll.js";
 
 const STORAGE_KEY = "davinci-widgets";
 
@@ -37,6 +38,7 @@ function loadActiveWidgets() {
 function App() {
     const [activeIds, setActiveIds] = useState(loadActiveWidgets);
     const [pickerOpen, setPickerOpen] = useState(false);
+    const scrollRef = useDragScroll("x");
 
     useEffect(() => {
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify(activeIds));
@@ -68,7 +70,7 @@ function App() {
                     </button>
                 </header>
 
-                <main className="dashboard-scroll">
+                <main className="dashboard-scroll" ref={scrollRef}>
                     {activeIds.map((id) => {
                         const widget = WIDGET_TYPES.find((entry) => entry.id === id);
                         if (!widget) return null;
