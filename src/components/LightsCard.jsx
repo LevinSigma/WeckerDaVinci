@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useAlarms } from "../AlarmContext.jsx";
+import { getSelectedSoundPath, getSelectedVolume } from "../audioLibrary.js";
 
 const PI_BASE_URL = import.meta.env.VITE_PI_ALARM_URL || "http://raspberrypi.local:5000";
 
@@ -6,10 +8,19 @@ export default function LightsCard() {
     const [status, setStatus] = useState({ scheinwerfer1: false, scheinwerfer2: false, beacon: false, fan: false });
     const [loading, setLoading] = useState(false);
     const [reachable, setReachable] = useState(true);
+    const [testPlaying, setTestPlaying] = useState(false);
+    const testAudioRef = useRef(null);
+    const { ringing } = useAlarms();
 
     useEffect(() => {
         fetchStatus();
     }, []);
+
+    useEffect(() => {
+        if (ringing) stopTest();
+    }, [ringing]);
+
+    useEffect(() => () => stopTest(), []);
 
     async function fetchStatus() {
         try {
@@ -18,7 +29,7 @@ export default function LightsCard() {
             setStatus(data);
             setReachable(true);
         } catch (error) {
-            console.warn("Lichtsteuerung nicht erreichbar:", error);
+            console.warn("Steuerung nicht erreichbar:", error);
             setReachable(false);
         }
     }
@@ -31,83 +42,77 @@ export default function LightsCard() {
             setStatus(data);
             setReachable(true);
         } catch (error) {
-            console.warn("Lichtsteuerung nicht erreichbar:", error);
+            console.warn("Steuerung nicht erreichbar:", error);
             setReachable(false);
         } finally {
             setLoading(false);
         }
     }
 
+    function stopTest() {
+        if (testAudioRef.current) {
+            testAudioRef.current.pause();
+            testAudioRef.current.currentTime = 0;
+            testAudioRef.current = null;
+        }
+        setTestPlaying(false);
+    }
+
+    function toggleTest() {
+        if (testPlaying) {
+            stopTest();
+            return;
+        }
+
+        const audio = new Audio(getSelectedSoundPath());
+        audio.loop = true;
+        audio.volume = getSelectedVolume();
+        audio.addEventListener("ended", () => setTestPlaying(false));
+        testAudioRef.current = audio;
+        void audio.play().catch((error) => {
+            console.warn("Testton konnte nicht abgespielt werden:", error);
+        });
+        setTestPlaying(true);
+    }
+
+    const deviceToggles = [
+        { key: "scheinwerfer1", label: "Licht 1", icon: "💡", on: status.scheinwerfer1, onClick: () => callEndpoint("/toggle/1") },
+        { key: "scheinwerfer2", label: "Licht 2", icon: "💡", on: status.scheinwerfer2, onClick: () => callEndpoint("/toggle/2") },
+        { key: "beacon", label: "Blitz", icon: "🚨", on: status.beacon, onClick: () => callEndpoint("/beacon/toggle") },
+        { key: "fan", label: "Wind", icon: "🌀", on: status.fan, onClick: () => callEndpoint("/fan/toggle") },
+    ];
+
     return (
         <div className="lights-widget">
             {!reachable && (
-                <p className="empty-state">Lichtsteuerung nicht erreichbar. Läuft der Server auf dem Raspberry Pi?</p>
+                <p className="empty-state">Steuerung nicht erreichbar. Läuft der Server auf dem Raspberry Pi?</p>
             )}
 
-            <div className="alarm-list">
-                <div className="alarm-item">
-                    <div>
-                        <div className="alarm-time">Scheinwerfer 1</div>
-                        <div className="alarm-label">{status.scheinwerfer1 ? "An" : "Aus"}</div>
-                    </div>
+            <div className="toggle-grid">
+                {deviceToggles.map((toggle) => (
                     <button
-                        className={`touch-button ${status.scheinwerfer1 ? "primary" : "secondary"}`}
-                        onClick={() => callEndpoint("/toggle/1")}
+                        key={toggle.key}
+                        type="button"
+                        className={`toggle-chip ${toggle.on ? "on" : ""}`}
+                        onClick={toggle.onClick}
                         disabled={loading}
+                        aria-pressed={toggle.on}
+                        aria-label={`${toggle.label} ${toggle.on ? "ausschalten" : "einschalten"}`}
                     >
-                        {status.scheinwerfer1 ? "Ausschalten" : "Einschalten"}
+                        <span className="toggle-chip-icon" aria-hidden="true">{toggle.icon}</span>
+                        <span className="toggle-chip-label">{toggle.label}</span>
                     </button>
-                </div>
+                ))}
 
-                <div className="alarm-item">
-                    <div>
-                        <div className="alarm-time">Scheinwerfer 2</div>
-                        <div className="alarm-label">{status.scheinwerfer2 ? "An" : "Aus"}</div>
-                    </div>
-                    <button
-                        className={`touch-button ${status.scheinwerfer2 ? "primary" : "secondary"}`}
-                        onClick={() => callEndpoint("/toggle/2")}
-                        disabled={loading}
-                    >
-                        {status.scheinwerfer2 ? "Ausschalten" : "Einschalten"}
-                    </button>
-                </div>
-
-                <div className="alarm-item">
-                    <div>
-                        <div className="alarm-time">Blitzleuchte</div>
-                        <div className="alarm-label">{status.beacon ? "An" : "Aus"}</div>
-                    </div>
-                    <button
-                        className={`touch-button ${status.beacon ? "primary" : "secondary"}`}
-                        onClick={() => callEndpoint("/beacon/toggle")}
-                        disabled={loading}
-                    >
-                        {status.beacon ? "Ausschalten" : "Einschalten"}
-                    </button>
-                </div>
-
-                <div className="alarm-item">
-                    <div>
-                        <div className="alarm-time">Ventilator</div>
-                        <div className="alarm-label">{status.fan ? "An" : "Aus"}</div>
-                    </div>
-                    <button
-                        className={`touch-button ${status.fan ? "primary" : "secondary"}`}
-                        onClick={() => callEndpoint("/fan/toggle")}
-                        disabled={loading}
-                    >
-                        {status.fan ? "Ausschalten" : "Einschalten"}
-                    </button>
-                </div>
-            </div>
-
-            <div className="alarm-actions">
-                <button className="touch-button primary" onClick={() => callEndpoint("/alle-an")} disabled={loading}>
-                    Alle An
-                </button>
-                <button className="touch-button secondary" onClick={() => callEndpoint("/alle-aus")} disabled={loading}>
-                    Alle Aus
+                <button
+                    type="button"
+                    className={`toggle-chip toggle-chip--wide ${testPlaying ? "on" : ""}`}
+                    onClick={toggleTest}
+                    aria-pressed={testPlaying}
+                    aria-label={testPlaying ? "Sound-Test stoppen" : "Sound-Test abspielen"}
+                >
+                    <span className="toggle-chip-icon" aria-hidden="true">🔊</span>
+                    <span className="toggle-chip-label">{testPlaying ? "Stopp" : "Sound-Test"}</span>
                 </button>
             </div>
         </div>

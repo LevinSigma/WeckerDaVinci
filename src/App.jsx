@@ -17,7 +17,7 @@ const WIDGET_TYPES = [
     { id: "clock", label: "Uhrzeit", icon: "🕐", size: "lg", component: ClockWidget },
     { id: "alarms", label: "Wecker", icon: "⏰", size: "lg", component: AlarmsWidget },
     { id: "weather", label: "Wetter", icon: "☁️", size: "sm", component: WeatherCard },
-    { id: "lights", label: "Licht", icon: "💡", size: "sm", component: LightsCard },
+    { id: "lights", label: "Steuerung", icon: "🎛️", size: "sm", component: LightsCard },
     { id: "todo", label: "To-Do", icon: "✅", size: "md", component: TodoCard },
 ];
 
@@ -68,7 +68,7 @@ function App() {
                     </button>
                 </header>
 
-                <main className="dashboard-grid">
+                <main className="dashboard-scroll">
                     {activeIds.map((id) => {
                         const widget = WIDGET_TYPES.find((entry) => entry.id === id);
                         if (!widget) return null;
