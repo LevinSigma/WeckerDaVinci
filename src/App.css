@@ -58,23 +58,26 @@
     background: var(--surface-strong);
 }
 
-/* Widgets flow top-to-bottom to fill the available screen height, then wrap
-   into a new column to the right. The scroll area grows horizontally as
-   widgets are added/removed instead of the page scrolling vertically. */
+/* A single row of full-height widgets that scrolls left/right. Each widget
+   stretches from the top of the screen to the bottom; the row grows wider
+   (scrollable) as widgets are added instead of the page scrolling vertically.
+   touch-action is declared explicitly here (pan-x) and on every internal
+   vertical scroller (pan-y, see below) so Chromium doesn't have to guess
+   which nested scroll container a touch-drag belongs to — without that,
+   ambiguous nested scrollers commonly fall back to "no touch scroll",
+   leaving only mouse/scrollbar-drag working. */
 .dashboard-scroll {
     flex: 1;
     min-height: 0;
     height: 100%;
     display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-content: flex-start;
+    flex-direction: row;
+    align-items: stretch;
     gap: clamp(0.55rem, 1.2vw, 0.9rem);
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
-    scroll-snap-type: x proximity;
     padding-bottom: 0.1rem;
 }
 
@@ -96,10 +99,9 @@
     display: flex;
     flex-direction: column;
     flex: 0 0 auto;
-    scroll-snap-align: start;
     min-width: 0;
     min-height: 0;
-    max-height: 100%;
+    height: 100%;
     width: clamp(230px, 25vw, 300px);
     background: var(--surface);
     border: 1px solid var(--border);
