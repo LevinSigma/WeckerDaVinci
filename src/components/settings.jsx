@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import "./settings.css";
 import { DEFAULT_SOUND_KEY, SOUND_LIBRARY, getSoundKeyForPath, getSoundPath } from "../audioLibrary.js";
+import { useDragScroll } from "../useDragScroll.js";
 
 export default function Settings() {
     const audioMap = Object.fromEntries(SOUND_LIBRARY.map((sound) => [sound.key, sound.path]));
@@ -8,6 +9,7 @@ export default function Settings() {
     const[isOpen, setIsOpen] = useState(false);
     const [savedSettings, setSavedSettings] = useState(null);
     const audioRef = useRef(null);
+    const contentRef = useDragScroll("y");
 
    const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem("settings_darkMode") === "true";
@@ -109,7 +111,7 @@ return (
 
       {isOpen && (
         <div className="modal-overlay" onClick={dontSave}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content" ref={contentRef} onClick={(e) => e.stopPropagation()}>
             <h4>Einstellungen</h4>
 
             <p className="settings-volume-label">Lautstärke ({volume}%)</p>

@@ -6,7 +6,7 @@ import { useDragScroll } from "../useDragScroll.js";
 
 export default function ClockWidget() {
     const [time, setTime] = useState(new Date());
-    const { timerEndAt, timerRemaining, cancelTimer } = useAlarms();
+    const { timerEndAt, timerRemaining, timerPaused, stopTimer } = useAlarms();
     const scrollRef = useDragScroll("y");
 
     useEffect(() => {
@@ -60,11 +60,11 @@ const [dailyQuote, setDailyQuote] = useState({ text: "", author: "" });
             <div className="clock-display">{formattedTime}</div>
             <div className="clock-date">{formattedDate}</div>
 
-            {timerEndAt != null && (
+            {(timerEndAt != null || timerPaused) && (
                 <div className="quote-card timer-running-card">
-                    <span className="quote-author">Timer läuft</span>
+                    <span className="quote-author">{timerEndAt != null ? "Timer läuft" : "Timer pausiert"}</span>
                     <div className="clock-display timer-remaining">{formattedTimerRemaining}</div>
-                    <button type="button" className="touch-button secondary" onClick={cancelTimer}>
+                    <button type="button" className="touch-button secondary" onClick={stopTimer}>
                         Timer abbrechen
                     </button>
                 </div>

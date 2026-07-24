@@ -4,12 +4,15 @@ import WidgetShell from "./components/WidgetShell.jsx";
 import WidgetPicker from "./components/WidgetPicker.jsx";
 import ClockWidget from "./components/ClockWidget.jsx";
 import AlarmsWidget from "./components/AlarmsWidget.jsx";
+import TimerWidget from "./components/TimerWidget.jsx";
 import WeatherCard from "./components/WeatherCard.jsx";
 import LightsCard from "./components/LightsCard.jsx";
 import TodoCard from "./components/TodoCard.jsx";
 import Settings from "./components/settings.jsx";
 import AlarmPopup from "./components/AlarmPopup.jsx";
+import TouchKeyboard from "./components/TouchKeyboard.jsx";
 import { AlarmProvider } from "./AlarmContext.jsx";
+import { KeyboardProvider } from "./KeyboardContext.jsx";
 import { useDragScroll } from "./useDragScroll.js";
 
 const STORAGE_KEY = "davinci-widgets";
@@ -17,6 +20,7 @@ const STORAGE_KEY = "davinci-widgets";
 const WIDGET_TYPES = [
     { id: "clock", label: "Uhrzeit", icon: "🕐", size: "lg", component: ClockWidget },
     { id: "alarms", label: "Wecker", icon: "⏰", size: "lg", component: AlarmsWidget },
+    { id: "timer", label: "Timer", icon: "⏱️", size: "md", component: TimerWidget },
     { id: "weather", label: "Wetter", icon: "☁️", size: "sm", component: WeatherCard },
     { id: "lights", label: "Steuerung", icon: "🎛️", size: "sm", component: LightsCard },
     { id: "todo", label: "To-Do", icon: "✅", size: "md", component: TodoCard },
@@ -56,47 +60,50 @@ function App() {
 
     return (
         <AlarmProvider>
-            <div className="dashboard">
-                <header className="dashboard-header">
-                    <Settings />
-                    <h1 className="dashboard-title">DaVinci Wecker</h1>
-                    <button
-                        type="button"
-                        className="add-widget-button"
-                        onClick={() => setPickerOpen(true)}
-                        aria-label="Widget hinzufügen"
-                    >
-                        +
-                    </button>
-                </header>
+            <KeyboardProvider>
+                <div className="dashboard">
+                    <header className="dashboard-header">
+                        <Settings />
+                        <h1 className="dashboard-title">DaVinci Wecker</h1>
+                        <button
+                            type="button"
+                            className="add-widget-button"
+                            onClick={() => setPickerOpen(true)}
+                            aria-label="Widget hinzufügen"
+                        >
+                            +
+                        </button>
+                    </header>
 
-                <main className="dashboard-scroll" ref={scrollRef}>
-                    {activeIds.map((id) => {
-                        const widget = WIDGET_TYPES.find((entry) => entry.id === id);
-                        if (!widget) return null;
-                        const WidgetComponent = widget.component;
-                        return (
-                            <WidgetShell
-                                key={id}
-                                title={widget.label}
-                                icon={widget.icon}
-                                size={widget.size}
-                                onRemove={() => removeWidget(id)}
-                            >
-                                <WidgetComponent />
-                            </WidgetShell>
-                        );
-                    })}
-                </main>
+                    <main className="dashboard-scroll" ref={scrollRef}>
+                        {activeIds.map((id) => {
+                            const widget = WIDGET_TYPES.find((entry) => entry.id === id);
+                            if (!widget) return null;
+                            const WidgetComponent = widget.component;
+                            return (
+                                <WidgetShell
+                                    key={id}
+                                    title={widget.label}
+                                    icon={widget.icon}
+                                    size={widget.size}
+                                    onRemove={() => removeWidget(id)}
+                                >
+                                    <WidgetComponent />
+                                </WidgetShell>
+                            );
+                        })}
+                    </main>
 
-                <WidgetPicker
-                    visible={pickerOpen}
-                    options={pickerOptions}
-                    onAdd={addWidget}
-                    onClose={() => setPickerOpen(false)}
-                />
-                <AlarmPopup />
-            </div>
+                    <WidgetPicker
+                        visible={pickerOpen}
+                        options={pickerOptions}
+                        onAdd={addWidget}
+                        onClose={() => setPickerOpen(false)}
+                    />
+                    <AlarmPopup />
+                    <TouchKeyboard />
+                </div>
+            </KeyboardProvider>
         </AlarmProvider>
     );
 }

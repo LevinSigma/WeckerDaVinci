@@ -1,12 +1,13 @@
-
-import { useState } from "react";
+import { useDragScroll } from "../useDragScroll.js";
 
 export default function WidgetPicker({ visible, options, onAdd, onClose }) {
+    const contentRef = useDragScroll("y");
+
     if (!visible) return null;
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content picker-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-content picker-content" ref={contentRef} onClick={(e) => e.stopPropagation()}>
                 <h4>Widget auswählen</h4>
 
                 {options.length === 0 ? (

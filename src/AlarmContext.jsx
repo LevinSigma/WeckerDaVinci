@@ -39,6 +39,8 @@ export function AlarmProvider({ children }) {
     const [lastTriggeredMinute, setLastTriggeredMinute] = useState(null);
     const [timerEndAt, setTimerEndAt] = useState(null);
     const [timerRemaining, setTimerRemaining] = useState(0);
+    const [timerDuration, setTimerDuration] = useState(0);
+    const [timerPaused, setTimerPaused] = useState(false);
     const audioRef = useRef(null);
 
     useEffect(() => {
@@ -54,6 +56,8 @@ export function AlarmProvider({ children }) {
                 if (remainingMs <= 0) {
                     setTimerEndAt(null);
                     setTimerRemaining(0);
+                    setTimerDuration(0);
+                    setTimerPaused(false);
                     setRinging((current) => current ?? { type: "timer", label: "Timer", time: "" });
                 } else {
                     setTimerRemaining(Math.ceil(remainingMs / 1000));
@@ -136,13 +140,34 @@ export function AlarmProvider({ children }) {
     }, []);
 
     const startTimer = useCallback((seconds) => {
+        setTimerDuration(seconds);
         setTimerEndAt(Date.now() + seconds * 1000);
         setTimerRemaining(seconds);
+        setTimerPaused(false);
     }, []);
 
-    const cancelTimer = useCallback(() => {
+    const pauseTimer = useCallback(() => {
+        setTimerEndAt(null);
+        setTimerPaused(true);
+    }, []);
+
+    const resumeTimer = useCallback(() => {
+        if (timerRemaining <= 0) return;
+        setTimerEndAt(Date.now() + timerRemaining * 1000);
+        setTimerPaused(false);
+    }, [timerRemaining]);
+
+    const resetTimer = useCallback(() => {
+        setTimerEndAt(null);
+        setTimerRemaining(timerDuration);
+        setTimerPaused(true);
+    }, [timerDuration]);
+
+    const stopTimer = useCallback(() => {
         setTimerEndAt(null);
         setTimerRemaining(0);
+        setTimerDuration(0);
+        setTimerPaused(false);
     }, []);
 
     const stop = useCallback(() => {
@@ -172,8 +197,13 @@ export function AlarmProvider({ children }) {
         snooze,
         timerEndAt,
         timerRemaining,
+        timerDuration,
+        timerPaused,
         startTimer,
-        cancelTimer,
+        pauseTimer,
+        resumeTimer,
+        resetTimer,
+        stopTimer,
     };
 
     return <AlarmContext.Provider value={value}>{children}</AlarmContext.Provider>;
