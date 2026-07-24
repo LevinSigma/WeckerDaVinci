@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDragScroll } from "../useDragScroll.js";
+import { useKeyboard } from "../KeyboardContext.jsx";
 
 const STORAGE_KEY = "davinci-todos";
 
@@ -18,6 +19,7 @@ export default function TodoCard() {
     const [editingId, setEditingId] = useState(null);
     const [editingText, setEditingText] = useState("");
     const listRef = useDragScroll("y");
+    const { openKeyboard } = useKeyboard();
 
     useEffect(() => {
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
@@ -67,6 +69,14 @@ export default function TodoCard() {
                     className="label-input"
                     value={newTodo}
                     onChange={(e) => setNewTodo(e.target.value)}
+                    onFocus={() =>
+                        openKeyboard({
+                            label: "Neues To-Do",
+                            onInsert: (char) => setNewTodo((current) => current + char),
+                            onBackspace: () => setNewTodo((current) => current.slice(0, -1)),
+                            onDone: () => {},
+                        })
+                    }
                     onKeyDown={(e) => e.key === "Enter" && addTodo()}
                     placeholder="Neues To-Do"
                 />
@@ -105,7 +115,14 @@ export default function TodoCard() {
                                     value={editingText}
                                     autoFocus
                                     onChange={(e) => setEditingText(e.target.value)}
-                                    onBlur={commitEdit}
+                                    onFocus={() =>
+                                        openKeyboard({
+                                            label: "To-Do bearbeiten",
+                                            onInsert: (char) => setEditingText((current) => current + char),
+                                            onBackspace: () => setEditingText((current) => current.slice(0, -1)),
+                                            onDone: () => commitEdit(),
+                                        })
+                                    }
                                     onKeyDown={(e) => e.key === "Enter" && commitEdit()}
                                 />
                             ) : (

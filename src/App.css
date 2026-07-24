@@ -228,6 +228,16 @@ button {
     color: var(--text);
 }
 
+.touch-button.danger {
+    background: var(--surface);
+    color: var(--danger);
+    border-color: rgba(217, 44, 76, 0.4);
+}
+
+.touch-button.danger:active {
+    background: rgba(255, 84, 112, 0.18);
+}
+
 .touch-button.large {
     min-height: 64px;
     font-size: 1.1rem;
@@ -241,8 +251,7 @@ button {
 }
 
 .btn-primary,
-.btn-secondary,
-.btn-timer {
+.btn-secondary {
     min-height: var(--tap-min);
     padding: 0.55rem 0.95rem;
     font-size: 0.88rem;
@@ -256,8 +265,7 @@ button {
 }
 
 .btn-primary:active,
-.btn-secondary:active,
-.btn-timer:active {
+.btn-secondary:active {
     transform: scale(0.96);
 }
 
@@ -270,11 +278,6 @@ button {
 .btn-secondary {
     background: var(--surface);
     color: var(--text-dim);
-}
-
-.btn-timer {
-    background: var(--surface-strong);
-    color: var(--text);
 }
 
 .icon-button {
@@ -341,14 +344,9 @@ button {
     color: var(--danger);
 }
 
-.time-input,
 .label-input,
-.timer-input-field,
-.time-input-native,
-.timer-input,
 input[type="text"],
-input[type="number"],
-input[type="time"] {
+input[type="number"] {
     min-height: var(--tap-min);
     padding: 0.75rem 1rem;
     font-size: 1rem;
@@ -359,18 +357,14 @@ input[type="time"] {
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.time-input:focus,
 .label-input:focus,
-.timer-input-field:focus,
-.time-input-native:focus,
 input:focus {
     outline: none;
     border-color: var(--accent);
     box-shadow: var(--shadow-glow);
 }
 
-.label-input,
-.timer-input-field {
+.label-input {
     flex: 1;
     min-width: 140px;
 }
@@ -418,6 +412,18 @@ input:focus {
     margin: auto;
 }
 
+.modal-content {
+    touch-action: none;
+}
+
+/* While the on-screen keyboard is open, pin modals to the top of the
+   viewport instead of centering them, so the focused input stays above
+   the keyboard panel instead of being hidden behind it. */
+body.keyboard-open .modal-overlay {
+    align-items: flex-start;
+    padding-top: 0.75rem;
+}
+
 .modal-content h4 {
     margin: 0;
     font-size: 1.15rem;
@@ -428,25 +434,6 @@ input:focus {
     justify-content: flex-end;
     gap: 0.6rem;
     margin-top: 0.2rem;
-}
-
-.separator {
-    width: 100%;
-    border: 0;
-    border-top: 1px solid var(--border);
-    margin: 0.3rem 0;
-}
-
-.timer-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
-
-.timer-section h4 {
-    color: var(--text-dim);
-    font-size: 0.95rem;
-    font-weight: 600;
 }
 
 .picker-content {
@@ -702,10 +689,6 @@ input:focus {
     color: var(--text-dim);
 }
 
-.time-input-native {
-    width: 100%;
-}
-
 /* ---------- Clock widget ---------- */
 
 .clock-widget {
@@ -786,6 +769,50 @@ input:focus {
 
 .timer-remaining {
     font-size: clamp(1.8rem, 4vw, 2.4rem);
+}
+
+/* ---------- Timer widget ---------- */
+
+.timer-widget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex: 1;
+    min-height: 0;
+    text-align: center;
+}
+
+.timer-widget > .touch-button {
+    width: 100%;
+    flex: none;
+}
+
+.timer-countdown {
+    font-size: clamp(2.2rem, 6vw, 3.2rem);
+    font-weight: 700;
+    font-family: var(--font-mono);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.timer-status {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    margin-top: -0.6rem;
+}
+
+.timer-controls {
+    display: flex;
+    gap: 0.6rem;
+    width: 100%;
+}
+
+.timer-controls .touch-button {
+    flex: 1;
 }
 
 /* ---------- Weather widget ---------- */
@@ -1020,4 +1047,99 @@ input:focus {
     display: flex;
     gap: 0.5rem;
     flex: none;
+}
+
+/* ---------- On-screen touch keyboard ---------- */
+
+.touch-keyboard {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2500;
+    background: var(--bg-2);
+    border-top: 1px solid var(--border-strong);
+    box-shadow: 0 -20px 45px -25px rgba(16, 22, 42, 0.35);
+    padding: 0.6rem 0.6rem calc(0.6rem + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    animation: keyboard-slide-up 0.18s ease;
+}
+
+.touch-keyboard-label {
+    font-size: 0.8rem;
+    color: var(--text-faint);
+    text-align: center;
+}
+
+.touch-keyboard-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.touch-keyboard-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.3rem;
+}
+
+.touch-keyboard-key {
+    flex: 1;
+    min-width: 0;
+    max-width: 52px;
+    min-height: 42px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    background: var(--surface-strong);
+    color: var(--text);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.1s var(--ease-pop), background 0.15s ease;
+}
+
+.touch-keyboard-key:active {
+    transform: scale(0.92);
+    background: var(--surface-hover);
+}
+
+.touch-keyboard-key.active {
+    background: var(--accent-gradient);
+    color: var(--on-accent);
+    border-color: transparent;
+}
+
+.touch-keyboard-actions {
+    gap: 0.4rem;
+}
+
+.touch-keyboard-key--wide {
+    flex: 1.4;
+    max-width: 90px;
+}
+
+.touch-keyboard-key--space {
+    flex: 5;
+    max-width: none;
+}
+
+.touch-keyboard-key--done {
+    flex: 1.6;
+    max-width: 110px;
+    background: var(--accent-gradient);
+    color: var(--on-accent);
+    border-color: transparent;
+}
+
+@keyframes keyboard-slide-up {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
 }
