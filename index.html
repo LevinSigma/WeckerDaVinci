@@ -7,6 +7,18 @@
     <title>weckerdavinci</title>
   </head>
   <body>
+    <script>
+      (function () {
+        try {
+          var known = ["light", "dark", "colorful", "night"];
+          var stored = localStorage.getItem("settings_theme");
+          var theme = known.indexOf(stored) !== -1
+            ? stored
+            : (localStorage.getItem("settings_darkMode") === "true" ? "dark" : "light");
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (e) {}
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

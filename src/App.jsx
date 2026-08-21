@@ -83,6 +83,7 @@ function App() {
                             return (
                                 <WidgetShell
                                     key={id}
+                                    id={id}
                                     title={widget.label}
                                     icon={widget.icon}
                                     size={widget.size}

@@ -1,7 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import "./settings.css";
 import { DEFAULT_SOUND_KEY, SOUND_LIBRARY, getSoundKeyForPath, getSoundPath } from "../audioLibrary.js";
+import { resolveStoredThemeKey } from "../themeLibrary.js";
 import { useDragScroll } from "../useDragScroll.js";
+import ThemeSelector from "./ThemeSelector.jsx";
 
 export default function Settings() {
     const audioMap = Object.fromEntries(SOUND_LIBRARY.map((sound) => [sound.key, sound.path]));
@@ -11,15 +13,9 @@ export default function Settings() {
     const audioRef = useRef(null);
     const contentRef = useDragScroll("y");
 
-   const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem("settings_darkMode") === "true";
-  });
+    const [theme, setTheme] = useState(() => resolveStoredThemeKey());
     const [volume, setVolume] = useState(() => {
         return Number(localStorage.getItem("settings_volume")) || 50;
-    });
-
-    const [theme, setTheme] = useState(() => {
-        return localStorage.getItem("settings_theme") || "light";
     });
 
     const [audio, setAudio] = useState(() => {
@@ -31,14 +27,16 @@ export default function Settings() {
         localStorage.setItem("settings_volume", volume);
     }, [volume]);
 
-
-    useEffect(() => {
-        localStorage.setItem("settings_theme", theme);
-    }, [theme]);
-
     useEffect(() => {
         localStorage.setItem("settings_audio", getSoundKeyForPath(audio));
     }, [audio]);
+
+    // Applies (and persists) immediately, same as before - so switching in
+    // the modal already previews live, and "Abbrechen" reverts it again.
+    useEffect(() => {
+        document.documentElement.setAttribute("data-theme", theme);
+        localStorage.setItem("settings_theme", theme);
+    }, [theme]);
 
     const handleSave = () => {
         if (audioRef.current) {
@@ -47,16 +45,10 @@ export default function Settings() {
         }
         localStorage.setItem("settings_volume", volume);
         localStorage.setItem("settings_audio", getSoundKeyForPath(audio));
-        localStorage.setItem("settings_darkMode", String(darkMode));
+        localStorage.setItem("settings_theme", theme);
 
         setIsOpen(false);
     };
-
-    useEffect(() => {
-        const theme = darkMode ? "dark" : "light";
-        document.documentElement.setAttribute("data-theme", theme);
-        localStorage.setItem("settings_darkMode", String(darkMode));
-    }, [darkMode]);
 
 const dontSave = () => {
     if (audioRef.current) {
@@ -65,7 +57,7 @@ const dontSave = () => {
     }
     if (savedSettings) {
       setVolume(savedSettings.volume);
-      setDarkMode(savedSettings.darkMode);
+      setTheme(savedSettings.theme);
       setAudio(savedSettings.audio);
     }
     setIsOpen(false);
@@ -73,7 +65,7 @@ const dontSave = () => {
     const openModal = () => {
     setSavedSettings({
       volume: volume,
-      darkMode: darkMode,
+      theme: theme,
       audio: audio,
     });
     setIsOpen(true);
@@ -94,7 +86,7 @@ const dontSave = () => {
             audioRef.current.volume = volume / 100;
         }
     }, [volume]);
-    
+
 
 return (
     <>
@@ -124,18 +116,9 @@ return (
               aria-label="Lautstärke"
             />
 
-            <div className="setting-row">
-              <span className="setting-label">Dark Mode</span>
-              <label className="switch" htmlFor="dark-mode-toggle">
-                <input
-                  id="dark-mode-toggle"
-                  type="checkbox"
-                  checked={darkMode}
-                  onChange={() => setDarkMode(!darkMode)}
-                  aria-label="Toggle dark mode"
-                />
-                <span className="slider round"></span>
-              </label>
+            <div className="setting-row setting-row-theme">
+              <span className="setting-label">Theme</span>
+              <ThemeSelector value={theme} onChange={setTheme} />
             </div>
 
             <div className="setting-row">
@@ -171,4 +154,3 @@ return (
     </>
   );
 }
-    

@@ -117,6 +117,7 @@
     -webkit-backdrop-filter: blur(18px);
     padding: clamp(0.65rem, 1.3vw, 1rem);
     overflow: hidden;
+    transition: background-color 0.2s ease, border-color 0.2s ease, border-left-color 0.2s ease;
 }
 
 .widget--sm {
@@ -144,6 +145,31 @@
     line-height: 1;
     flex: none;
 }
+
+/* Colorful mode gives each widget type its own accent (set per data-widget
+   in index.css) instead of one flat accent everywhere - a left accent bar
+   plus a tinted icon badge, so the dashboard reads as a "lively" set of
+   distinct cards rather than light mode with louder colors. */
+[data-theme="colorful"] .widget {
+    border-left: 4px solid var(--widget-accent, var(--accent));
+}
+
+[data-theme="colorful"] .widget-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--widget-accent, var(--accent)) 20%, transparent);
+}
+
+[data-theme="colorful"] .widget[data-widget="clock"] { --widget-accent: var(--widget-accent-clock); }
+[data-theme="colorful"] .widget[data-widget="alarms"] { --widget-accent: var(--widget-accent-alarms); }
+[data-theme="colorful"] .widget[data-widget="timer"] { --widget-accent: var(--widget-accent-timer); }
+[data-theme="colorful"] .widget[data-widget="weather"] { --widget-accent: var(--widget-accent-weather); }
+[data-theme="colorful"] .widget[data-widget="lights"] { --widget-accent: var(--widget-accent-lights); }
+[data-theme="colorful"] .widget[data-widget="todo"] { --widget-accent: var(--widget-accent-todo); }
 
 .widget-title {
     flex: 1;
@@ -178,9 +204,9 @@
 
 .widget-remove:active {
     transform: scale(0.9);
-    background: rgba(255, 84, 112, 0.18);
+    background: var(--danger-tint);
     color: var(--danger);
-    border-color: rgba(255, 84, 112, 0.4);
+    border-color: var(--danger-tint-border);
 }
 
 .widget-body {
@@ -220,7 +246,7 @@ button {
     background: var(--accent-gradient);
     border-color: transparent;
     color: var(--on-accent);
-    box-shadow: 0 12px 30px -14px rgba(124, 107, 255, 0.65);
+    box-shadow: 0 12px 30px -14px var(--accent-shadow);
 }
 
 .touch-button.secondary {
@@ -231,11 +257,11 @@ button {
 .touch-button.danger {
     background: var(--surface);
     color: var(--danger);
-    border-color: rgba(217, 44, 76, 0.4);
+    border-color: var(--danger-tint-border);
 }
 
 .touch-button.danger:active {
-    background: rgba(255, 84, 112, 0.18);
+    background: var(--danger-tint);
 }
 
 .touch-button.large {
@@ -302,7 +328,7 @@ button {
 }
 
 .icon-button.danger:active {
-    background: rgba(255, 84, 112, 0.18);
+    background: var(--danger-tint);
     color: var(--danger);
 }
 
@@ -340,7 +366,7 @@ button {
 }
 
 .delete-button:active {
-    background: rgba(255, 84, 112, 0.18);
+    background: var(--danger-tint);
     color: var(--danger);
 }
 
@@ -532,7 +558,7 @@ body.keyboard-open .modal-overlay {
 }
 
 .alarm-item.ringing {
-    background: rgba(124, 107, 255, 0.18);
+    background: var(--accent-tint);
     border-color: var(--accent);
 }
 
@@ -601,7 +627,7 @@ body.keyboard-open .modal-overlay {
 }
 
 .toggle-switch.on .toggle-knob {
-    background: #fff;
+    background: var(--on-accent);
     transform: translateX(19px);
 }
 
@@ -916,7 +942,7 @@ body.keyboard-open .modal-overlay {
     background: var(--accent-gradient);
     border-color: transparent;
     color: var(--on-accent);
-    box-shadow: 0 10px 22px -14px rgba(124, 107, 255, 0.6);
+    box-shadow: 0 10px 22px -14px var(--accent-shadow);
 }
 
 .toggle-chip:disabled {
