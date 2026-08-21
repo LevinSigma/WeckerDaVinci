@@ -1,6 +1,12 @@
 import beepAudio from "./assets/beep.mp3";
 import morningJoyAudio from "./assets/morningJoy.mp3";
 import synapseAudio from "./assets/synapse.mp3";
+import beeps700HzAudio from "./assets/beeps700Hz.mp3";
+import alarmBellAudio from "./assets/alarmBell.mp3";
+import starDustAudio from "./assets/starDust.mp3";
+import superMario64Audio from "./assets/superMario64.mp3";
+import ringtone022Audio from "./assets/ringtone022.mp3";
+import ringtone025Audio from "./assets/ringtone025.mp3";
 
 export const DEFAULT_SOUND_KEY = "beep";
 
@@ -8,6 +14,12 @@ export const SOUND_LIBRARY = [
     { key: "beep", name: "Beep", path: beepAudio },
     { key: "morningJoy", name: "Morning Joy", path: morningJoyAudio },
     { key: "synapse", name: "Synapse", path: synapseAudio },
+    { key: "beeps700Hz", name: "700 Hz Beeps", path: beeps700HzAudio },
+    { key: "alarmBell", name: "Alarm Bell", path: alarmBellAudio },
+    { key: "starDust", name: "Star Dust", path: starDustAudio },
+    { key: "superMario64", name: "Super Mario 64", path: superMario64Audio },
+    { key: "ringtone022", name: "Ringtone 022", path: ringtone022Audio },
+    { key: "ringtone025", name: "Ringtone 025", path: ringtone025Audio },
 ];
 
 const soundPathByKey = Object.fromEntries(SOUND_LIBRARY.map((sound) => [sound.key, sound.path]));
