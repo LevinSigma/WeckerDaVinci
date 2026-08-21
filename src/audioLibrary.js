@@ -7,6 +7,9 @@ import starDustAudio from "./assets/starDust.mp3";
 import superMario64Audio from "./assets/superMario64.mp3";
 import ringtone022Audio from "./assets/ringtone022.mp3";
 import ringtone025Audio from "./assets/ringtone025.mp3";
+import gangnamStyleAudio from "./assets/gangnamStyle.mp3";
+import intoxicatedAudio from "./assets/intoxicated.mp3";
+import justDanceAudio from "./assets/justDance.mp3";
 
 export const DEFAULT_SOUND_KEY = "beep";
 
@@ -20,6 +23,9 @@ export const SOUND_LIBRARY = [
     { key: "superMario64", name: "Super Mario 64", path: superMario64Audio },
     { key: "ringtone022", name: "Ringtone 022", path: ringtone022Audio },
     { key: "ringtone025", name: "Ringtone 025", path: ringtone025Audio },
+    { key: "gangnamStyle", name: "Gangnam Style", path: gangnamStyleAudio },
+    { key: "intoxicated", name: "Intoxicated", path: intoxicatedAudio },
+    { key: "justDance", name: "Just Dance", path: justDanceAudio },
 ];
 
 const soundPathByKey = Object.fromEntries(SOUND_LIBRARY.map((sound) => [sound.key, sound.path]));
