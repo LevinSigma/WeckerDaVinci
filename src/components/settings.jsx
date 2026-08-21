@@ -2,10 +2,14 @@ import { useEffect, useState, useRef } from "react";
 import "./settings.css";
 import { DEFAULT_SOUND_KEY, SOUND_LIBRARY, getSoundKeyForPath, getSoundPath } from "../audioLibrary.js";
 import { resolveStoredThemeKey } from "../themeLibrary.js";
+import { applyBackground, resolveStoredBackgroundKey } from "../backgroundLibrary.js";
 import { useDragScroll } from "../useDragScroll.js";
 import ThemeSelector from "./ThemeSelector.jsx";
+import BackgroundSelector from "./BackgroundSelector.jsx";
+import Dropdown from "./Dropdown.jsx";
 
 export default function Settings() {
+    const soundOptions = SOUND_LIBRARY.map((sound) => ({ key: sound.key, label: sound.name }));
     const audioMap = Object.fromEntries(SOUND_LIBRARY.map((sound) => [sound.key, sound.path]));
 
     const[isOpen, setIsOpen] = useState(false);
@@ -14,6 +18,7 @@ export default function Settings() {
     const contentRef = useDragScroll("y");
 
     const [theme, setTheme] = useState(() => resolveStoredThemeKey());
+    const [background, setBackground] = useState(() => resolveStoredBackgroundKey());
     const [volume, setVolume] = useState(() => {
         return Number(localStorage.getItem("settings_volume")) || 50;
     });
@@ -38,6 +43,11 @@ export default function Settings() {
         localStorage.setItem("settings_theme", theme);
     }, [theme]);
 
+    useEffect(() => {
+        applyBackground(background);
+        localStorage.setItem("settings_background", background);
+    }, [background]);
+
     const handleSave = () => {
         if (audioRef.current) {
             audioRef.current.pause();
@@ -46,6 +56,7 @@ export default function Settings() {
         localStorage.setItem("settings_volume", volume);
         localStorage.setItem("settings_audio", getSoundKeyForPath(audio));
         localStorage.setItem("settings_theme", theme);
+        localStorage.setItem("settings_background", background);
 
         setIsOpen(false);
     };
@@ -58,6 +69,7 @@ const dontSave = () => {
     if (savedSettings) {
       setVolume(savedSettings.volume);
       setTheme(savedSettings.theme);
+      setBackground(savedSettings.background);
       setAudio(savedSettings.audio);
     }
     setIsOpen(false);
@@ -66,6 +78,7 @@ const dontSave = () => {
     setSavedSettings({
       volume: volume,
       theme: theme,
+      background: background,
       audio: audio,
     });
     setIsOpen(true);
@@ -116,28 +129,28 @@ return (
               aria-label="Lautstärke"
             />
 
-            <div className="setting-row setting-row-theme">
+            <div className="setting-row setting-row-stack">
               <span className="setting-label">Theme</span>
               <ThemeSelector value={theme} onChange={setTheme} />
             </div>
 
+            <div className="setting-row setting-row-stack">
+              <span className="setting-label">Hintergrund</span>
+              <BackgroundSelector value={background} onChange={setBackground} />
+            </div>
+
             <div className="setting-row">
               <span className="setting-label">Audio:</span>
-              <select
-                className="setting-select"
+              <Dropdown
+                options={soundOptions}
                 value={getSoundKeyForPath(audio)}
-                onChange={(e) => {
-                  const selectedAudio = audioMap[e.target.value];
+                ariaLabel="Sound auswählen"
+                onChange={(key) => {
+                  const selectedAudio = audioMap[key];
                   setAudio(selectedAudio);
                   playPreview(selectedAudio);
                 }}
-              >
-                {SOUND_LIBRARY.map((sound) => (
-                  <option key={sound.key} value={sound.key}>
-                    {sound.name}
-                  </option>
-                ))}
-              </select>
+              />
          </div>
 
             <div className="button-group-right">
