@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const THRESHOLD = 6;
 
@@ -12,11 +12,18 @@ const THRESHOLD = 6;
 // scrollLeft/scrollTop by hand here works regardless of how the input
 // arrived. Pair with `touch-action: none` on the element so the browser
 // doesn't also try to handle the gesture natively and fight this.
+//
+// Returns a callback ref rather than a plain useRef: several callers attach
+// this to content that's only mounted conditionally (a modal's body, a
+// dropdown panel behind isOpen &&...). A plain ref's effect only runs once,
+// so if the element didn't exist yet on that first run (closed modal), it
+// would silently never attach - a callback ref re-fires every time the
+// underlying DOM node actually changes, including from null to a real node.
 export function useDragScroll(axis = "x") {
-    const ref = useRef(null);
+    const [el, setEl] = useState(null);
+    const ref = useCallback((node) => setEl(node), []);
 
     useEffect(() => {
-        const el = ref.current;
         if (!el) return undefined;
 
         let pointerId = null;
@@ -111,7 +118,7 @@ export function useDragScroll(axis = "x") {
             window.removeEventListener("pointerup", scheduleReset, true);
             window.removeEventListener("pointercancel", scheduleReset, true);
         };
-    }, [axis]);
+    }, [axis, el]);
 
     return ref;
 }
