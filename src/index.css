@@ -20,6 +20,10 @@
 
     --glow-1: rgba(106, 77, 255, 0.22);
     --glow-2: rgba(8, 145, 178, 0.16);
+    --accent-tint: rgba(106, 77, 255, 0.18);
+    --accent-shadow: rgba(106, 77, 255, 0.6);
+    --danger-tint: rgba(217, 44, 76, 0.18);
+    --danger-tint-border: rgba(217, 44, 76, 0.4);
 
     --radius-lg: 26px;
     --radius-md: 18px;
@@ -60,10 +64,92 @@
 
     --glow-1: rgba(124, 107, 255, 0.35);
     --glow-2: rgba(34, 211, 238, 0.22);
+    --accent-tint: rgba(124, 107, 255, 0.18);
+    --accent-shadow: rgba(124, 107, 255, 0.6);
+    --danger-tint: rgba(255, 84, 112, 0.18);
+    --danger-tint-border: rgba(255, 84, 112, 0.4);
 
     --shadow-card: 0 20px 45px -20px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.05);
     --shadow-pop: 0 30px 70px -25px rgba(0, 0, 0, 0.65);
     --shadow-glow: 0 0 0 4px rgba(124, 107, 255, 0.25);
+
+    color-scheme: dark;
+}
+
+/* ---- Colorful theme: vivid violet-to-pink dashboard on a soft light base.
+   Same structural tokens as light/dark, just a bolder, more saturated palette -
+   still light enough for native controls (color-scheme: light). ---- */
+:root[data-theme="colorful"] {
+    --bg-1: #f2ecff;
+    --bg-2: #fff5fa;
+    --surface: rgba(124, 58, 237, 0.07);
+    --surface-strong: rgba(124, 58, 237, 0.12);
+    --surface-hover: rgba(124, 58, 237, 0.18);
+    --border: rgba(124, 58, 237, 0.2);
+    --border-strong: rgba(124, 58, 237, 0.32);
+    --text: #2c1a4d;
+    --text-dim: rgba(44, 26, 77, 0.68);
+    --text-faint: rgba(44, 26, 77, 0.46);
+
+    --accent: #7c3aed;
+    --accent-2: #ec4899;
+    --danger: #e11d48;
+    --success: #16a34a;
+    --on-accent: #ffffff;
+
+    --glow-1: rgba(124, 58, 237, 0.3);
+    --glow-2: rgba(236, 72, 153, 0.24);
+    --accent-tint: rgba(124, 58, 237, 0.18);
+    --accent-shadow: rgba(124, 58, 237, 0.55);
+    --danger-tint: rgba(225, 29, 72, 0.18);
+    --danger-tint-border: rgba(225, 29, 72, 0.4);
+
+    --shadow-card: 0 20px 45px -25px rgba(124, 58, 237, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    --shadow-pop: 0 30px 70px -30px rgba(124, 58, 237, 0.4);
+    --shadow-glow: 0 0 0 4px rgba(124, 58, 237, 0.28);
+
+    /* Per-widget accents, used only in colorful mode (see App.css). */
+    --widget-accent-clock: #0ea5e9;
+    --widget-accent-alarms: #f97316;
+    --widget-accent-timer: #eab308;
+    --widget-accent-weather: #06b6d4;
+    --widget-accent-lights: #22c55e;
+    --widget-accent-todo: #ec4899;
+
+    color-scheme: light;
+}
+
+/* ---- Night theme: a warm, amber-shifted dark mode modeled on phone "night
+   light" filters - cool blues are replaced by amber/terracotta throughout so
+   there is no cold light left anywhere in the palette. ---- */
+:root[data-theme="night"] {
+    --bg-1: #1a120b;
+    --bg-2: #241a10;
+    --surface: rgba(255, 200, 130, 0.06);
+    --surface-strong: rgba(255, 200, 130, 0.1);
+    --surface-hover: rgba(255, 200, 130, 0.15);
+    --border: rgba(255, 200, 130, 0.14);
+    --border-strong: rgba(255, 200, 130, 0.24);
+    --text: #f5e2c8;
+    --text-dim: rgba(245, 226, 200, 0.66);
+    --text-faint: rgba(245, 226, 200, 0.42);
+
+    --accent: #e8973a;
+    --accent-2: #c66a2e;
+    --danger: #d1483a;
+    --success: #8fae4a;
+    --on-accent: #1a120b;
+
+    --glow-1: rgba(232, 151, 58, 0.28);
+    --glow-2: rgba(198, 106, 46, 0.2);
+    --accent-tint: rgba(232, 151, 58, 0.18);
+    --accent-shadow: rgba(232, 151, 58, 0.5);
+    --danger-tint: rgba(209, 72, 58, 0.18);
+    --danger-tint-border: rgba(209, 72, 58, 0.4);
+
+    --shadow-card: 0 20px 45px -20px rgba(10, 6, 2, 0.6), inset 0 1px 0 rgba(255, 220, 180, 0.05);
+    --shadow-pop: 0 30px 70px -25px rgba(10, 6, 2, 0.7);
+    --shadow-glow: 0 0 0 4px rgba(232, 151, 58, 0.3);
 
     color-scheme: dark;
 }

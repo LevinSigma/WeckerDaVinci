@@ -1,6 +1,6 @@
-export default function WidgetShell({ title, icon, onRemove, size, children }) {
+export default function WidgetShell({ id, title, icon, onRemove, size, children }) {
     return (
-        <section className={`widget widget--${size || "md"}`}>
+        <section className={`widget widget--${size || "md"}`} data-widget={id}>
             <header className="widget-header">
                 <span className="widget-icon" aria-hidden="true">{icon}</span>
                 <h2 className="widget-title">{title}</h2>

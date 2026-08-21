@@ -46,6 +46,12 @@
     font-weight: 600;
 }
 
+.setting-row-theme {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+}
+
 .setting-select {
     width: 100%;
     min-height: var(--tap-min);
@@ -84,56 +90,73 @@ input[type="range"] {
     min-height: var(--tap-min-sm);
 }
 
-/* ---------- Slider toggle ---------- */
+/* ---------- Theme selector ----------
+   Four touch cards instead of a dropdown. Each card's mini preview uses its
+   own --sw-* custom properties (set inline per option in ThemeSelector.jsx)
+   rather than the live theme variables, since it has to show what a theme
+   *not* currently active looks like. */
 
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-    flex-shrink: 0;
+.theme-selector {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
 }
 
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
+.theme-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 84px;
+    padding: 0.5rem 0.35rem 0.6rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
     cursor: pointer;
-    inset: 0;
-    background-color: var(--surface-strong);
-    border: 1px solid var(--border-strong);
-    transition: background-color 0.2s ease, border-color 0.2s ease;
-    border-radius: var(--radius-pill);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s var(--ease-pop), background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
 }
 
-.slider:before {
+.theme-option:active {
+    transform: scale(0.95);
+}
+
+.theme-option.selected {
+    background: var(--surface-strong);
+    border-color: var(--accent);
+    box-shadow: var(--shadow-glow);
+    color: var(--text);
+}
+
+.theme-option-preview {
+    position: relative;
+    width: 100%;
+    height: 28px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--sw-2), var(--sw-1));
+    border: 1px solid var(--border);
+    overflow: visible;
+}
+
+.theme-option-dot {
     position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 3px;
-    top: 3px;
-    background-color: var(--bg-2);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s var(--ease-pop);
+    right: -4px;
+    bottom: -4px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
+    background: linear-gradient(135deg, var(--sw-3), var(--sw-4));
+    border: 2px solid var(--bg-2);
 }
 
-input:checked + .slider {
-    background: var(--accent-gradient);
-    border-color: transparent;
+.theme-option-icon {
+    font-size: 1.15rem;
+    line-height: 1;
 }
 
-input:checked + .slider:before {
-    transform: translateX(26px);
-    background-color: #fff;
-}
-
-input:focus-visible + .slider {
-    outline: 2px solid var(--accent-2);
-    outline-offset: 2px;
+.theme-option-name {
+    font-size: 0.72rem;
+    font-weight: 700;
 }
